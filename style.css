@@ -1,0 +1,454 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--mainGrey);
+}
+:root {
+  --primaryColor: #2da1ad;
+  --mainGrey: #bbc4c3;
+  --backgroundGrey: #bbc4c3;
+  font-family: 'lato';
+  font-size: 18px;
+  /* font-weight: bold; */
+  letter-spacing: 0;
+  line-height: 22px;
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.logo-top {
+  background-color: var(--primaryColor);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 19px;
+  padding-bottom: 14px;
+  height: 53px;
+}
+
+.logo-bottom {
+  background-color: var(--primaryColor);
+  opacity: 0.3;
+  height: 7px;
+}
+
+header > div > img {
+  height: 18.45px;
+  width: 178.22px;
+  margin: 0 auto;
+}
+
+nav {
+  display: inline;
+  height: 120px;
+}
+
+nav > div {
+  display: inline-block;
+}
+
+nav > div > a {
+  display: inline-block;
+  margin: 0px 5px;
+  padding: 49px 30px;
+  text-decoration: none;
+  color: var(--mainGrey);
+  font-size: 18px;
+}
+
+.link > a {
+  color: var(--primaryColor);
+  line-height: 22px;
+}
+
+.link > a {
+  color: var(--primaryColor);
+  line-height: 22px;
+}
+
+.line1 {
+  box-sizing: border-box;
+  font-size: 12px;
+  height: 15px;
+  width: 3px;
+  border-right: 1px solid var(--mainGrey);
+}
+
+.search-container {
+  border-top: 1px solid var(--primaryColor);
+  height: 180px;
+  width: 92%;
+  max-width: 1440px;
+  padding: 61px;
+}
+
+.search-bar {
+  box-sizing: border-box;
+  height: 60px;
+  width: 540px;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 34px 0 #e3e3e3;
+}
+
+.search-icon {
+  background: url('/assets/Icons/search/Combined\ Shape.svg');
+  height: 18px;
+  width: 17px;
+  display: block;
+  margin: 23px 0px 19px 23px;
+}
+
+input {
+  padding: 4px 12px;
+  width: 500px;
+  border: none;
+  margin: 23px 0px 19px 0px;
+  outline: none;
+  color: var(--primaryColor);
+  font-size: 18px;
+}
+
+/* CONTACTS */
+.contacts-container {
+  width: 94%;
+  max-width: 1440px;
+  padding: 0 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: auto;
+}
+
+/* ADD NEW CONTACT*/
+.addNew {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  height: 150px;
+  width: 270px;
+  border: 1px dashed #2da1ad;
+  opacity: 0.5;
+  border-radius: 4px;
+  margin: 0px 15px 29px 15px;
+  padding: 52px 104px 50px 104px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.add-icon {
+  background: url('/assets/Icons/add/Combined\ Shape.svg');
+  height: 18px;
+  width: 18px;
+}
+
+.add-text {
+  height: 19px;
+  width: 62px;
+  color: #2da1ad;
+  font-family: 'Lato';
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 19px;
+  opacity: 0.5;
+}
+
+/* MARKED CONTACT*/
+.contact-marked {
+  display: grid;
+  height: 150px;
+  width: 270px;
+  border: 1px solid #2da1ad;
+  border-radius: 4px;
+  background-color: #ffffff;
+  margin: 0px 15px 29px 15px;
+}
+
+.contact-top {
+  display: grid;
+  grid-template-columns: 15% 50% 20% 15%;
+  height: 105px;
+}
+
+.marked-heart-icon {
+  background: url('/assets/Icons/heart\ full-1/Combined\ Shape.svg');
+  width: 15px;
+  height: 14px;
+  margin: 15px 0px 0px 17px;
+}
+
+.unmarked-heart-icon {
+  background: url('/assets/Icons/heart\ empty-1/Combined\ Shape.svg');
+  width: 15px;
+  height: 14px;
+  margin: 15px 0px 0px 17px;
+}
+
+.img-icon {
+  height: 66px;
+  width: 66px;
+  border: 3px solid rgba(187, 196, 195, 0.3);
+  border-radius: 50%;
+  margin: 26px 0px 0px 61.5px;
+}
+
+.edit-icon {
+  width: 16px;
+  height: 16px;
+  background: url('/assets/Icons/edit/Combined\ Shape.svg');
+  margin: 15px 2px 0px 22.5px;
+}
+.delete-icon {
+  height: 17px;
+  width: 13px;
+  background: url('/assets/Icons/delete/Combined\ Shape.svg');
+  margin: 15px 17px 0px 10.5px;
+}
+
+.contact-bottom {
+  display: flex;
+  justify-content: center;
+}
+
+.name-output {
+  height: 22px;
+  width: 141px;
+  color: #bbc4c3;
+  font-family: 'Lato';
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 22px;
+  text-align: center;
+  margin-bottom: 23px;
+}
+
+/* UNMARKED CONTACTS  */
+.contact-unmarked {
+  display: grid;
+  height: 150px;
+  width: 270px;
+  border: 1px solid rgba(187, 196, 195, 0.4);
+  border-radius: 4px;
+  background-color: #ffffff;
+  margin: 0px 15px 29px 15px;
+}
+
+/* ADD NEW CONTACT*/
+/* .add-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.add-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.left-section {
+  /* display: flex;
+  justify-content: center; */
+  /* margin-left: 296px; */
+}
+
+.add-circle {
+  height: 186px;
+  width: 186px;
+  border-radius: 50%;
+  border: 3px solid rgba(187, 196, 195, 0.3);
+  background-color: rgba(45, 161, 173, 0.4);
+  margin-top: 57px;
+}
+
+.upload-icon {
+  background: url('/assets/Icons/upload/Combined\ Shape.svg');
+  height: 20px;
+  width: 23px;
+}
+
+.right-section {
+  margin: 22px;
+}
+
+.arrow-back-icon {
+  background: url('/assets/Icons/arrow\ back/Combined\ Shape.svg');
+  width: 21px;
+  height: 16px;
+  background-repeat: no-repeat;
+  margin: 99px 12px 36px 12px;
+  border: none;
+  display: block;
+}
+
+/* NAME */
+.input-container {
+  width: 630px;
+  border-top: 2px solid #2da1ad;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.header-box {
+  display: flex;
+}
+
+.header-text {
+  margin-top: 17px;
+  color: #2da1ad;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 19px;
+}
+
+.input-bar {
+  height: 60px;
+  width: 300px;
+  border: 1px solid #bbc4c3;
+  opacity: 0.4;
+  border-radius: 4px;
+  margin: 22px 0px 30px 0px;
+  color: rgb(86, 86, 86);
+  font-size: 16px;
+  padding-left: 30px;
+}
+
+.source-number {
+  height: 60px;
+  width: 240px;
+  border: 1px solid rgba(86, 86, 86, 0.4);
+  border-radius: 4px;
+  background-color: #ffffff;
+  opacity: 0.4;
+  color: rgb(86, 86, 86);
+  margin: 22px 29px 30px 30px;
+  padding-left: 30px;
+}
+
+.name-icon {
+  background: url('/assets/Icons/person/Combined\ Shape.svg');
+  width: 15px;
+  height: 15px;
+  margin: 19px 15px 0px 0px;
+}
+
+.email-icon {
+  background: url('/assets/Icons/email/Combined\ Shape.svg');
+  height: 10px;
+  width: 15px;
+  margin: 19px 15px 0px 0px;
+}
+
+.phone-icon {
+  background: url('/assets/Icons/phone/Combined\ Shape.svg');
+  width: 15px;
+  height: 15px;
+  margin: 20px 15px 0px 0px;
+}
+
+.remove-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  opacity: 0.5;
+  border: 1px solid #bbc4c3;
+  margin: 22px 0px 26px 0px;
+  cursor: pointer;
+}
+
+.remove-number-icon {
+  background: url('/assets/Icons/remove/Combined\ Shape.svg');
+  background-size: 8px;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  filter: invert(82%) sepia(8%) saturate(154%) hue-rotate(124deg)
+    brightness(93%) contrast(92%);
+}
+
+.add-number-container {
+  display: flex;
+  align-items: center;
+  margin: 14px 0px 24px 0px;
+}
+
+.add-number-circle {
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  opacity: 0.5;
+  border: 1px solid var(--primaryColor);
+  cursor: pointer;
+}
+
+.add-number-icon {
+  background: url('/assets/Icons/remove/Combined\ Shape.svg');
+  background-size: 8px;
+  width: 8px;
+  height: 8px;
+  filter: invert(58%) sepia(26%) saturate(1133%) hue-rotate(137deg)
+    brightness(89%) contrast(82%);
+}
+
+.add-number-text {
+  margin-left: 15px;
+  color: var(--primaryColor);
+  font-size: 14px;
+  font-weight: lighter;
+  letter-spacing: 0;
+  line-height: 17px;
+  display: block;
+}
+
+.form-circle img {
+  border: none;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.save-button {
+  height: 42px;
+  width: 160px;
+  border-radius: 28.5px;
+  background-color: #2da1ad;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 17px;
+  margin: 80px 0px 78px 0px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  height: 42px;
+  width: 160px;
+  border-radius: 28.5px;
+  background-color: #bbc4c3;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 17px;
+  margin: 80px 0px 78px 0px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cancel-button h4 {
+  text-decoration: none;
+  color: white;
+  font-weight: lighter;
+}
