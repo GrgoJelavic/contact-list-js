@@ -101,7 +101,7 @@ nav > div > a {
 }
 
 .search-icon {
-  background: url('/assets/Icons/search/Combined\ Shape.svg');
+  background: url('../assets/Icons/search/Combined\ Shape.svg');
   height: 18px;
   width: 17px;
   display: block;
@@ -112,7 +112,7 @@ input {
   padding: 4px 12px;
   width: 500px;
   border: none;
-  margin: 23px 0px 19px 0px;
+  margin: 23px 0px 19px 12px;
   outline: none;
   color: var(--primaryColor);
   font-size: 18px;
@@ -146,7 +146,7 @@ input {
 }
 
 .add-icon {
-  background: url('/assets/Icons/add/Combined\ Shape.svg');
+  background: url('../assets/Icons/add/Combined\ Shape.svg');
   height: 18px;
   width: 18px;
 }
@@ -162,15 +162,23 @@ input {
   opacity: 0.5;
 }
 
-/* MARKED CONTACT*/
+/* UNMARKED CONTACTS  */
 .contact-marked {
   display: grid;
   height: 150px;
   width: 270px;
-  border: 1px solid #2da1ad;
+  border: 1px solid rgba(187, 196, 195, 0.4);
   border-radius: 4px;
   background-color: #ffffff;
   margin: 0px 15px 29px 15px;
+}
+.hide {
+  display: none;
+}
+
+/* MARKED CONTACT*/
+.contact-marked:hover {
+  border: 1px solid var(--primaryColor);
 }
 
 .contact-top {
@@ -179,15 +187,19 @@ input {
   height: 105px;
 }
 
+.favorite {
+  cursor: pointer;
+}
+
 .marked-heart-icon {
-  background: url('/assets/Icons/heart\ full-1/Combined\ Shape.svg');
+  background: url('../assets/Icons/heart\ full-1/Combined\ Shape.svg');
   width: 15px;
   height: 14px;
   margin: 15px 0px 0px 17px;
 }
 
 .unmarked-heart-icon {
-  background: url('/assets/Icons/heart\ empty-1/Combined\ Shape.svg');
+  background: url('../assets/Icons/heart\ empty-1/Combined\ Shape.svg');
   width: 15px;
   height: 14px;
   margin: 15px 0px 0px 17px;
@@ -201,17 +213,30 @@ input {
   margin: 26px 0px 0px 61.5px;
 }
 
+.contact-marked:hover > .contact-top > .hide {
+  display: block;
+}
 .edit-icon {
+  /* display: block; */
   width: 16px;
   height: 16px;
-  background: url('/assets/Icons/edit/Combined\ Shape.svg');
+  background: url('../assets/Icons/edit/Combined\ Shape.svg');
   margin: 15px 2px 0px 22.5px;
+  cursor: pointer;
+}
+
+.edit-box {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 .delete-icon {
+  /* display: block; */
   height: 17px;
   width: 13px;
-  background: url('/assets/Icons/delete/Combined\ Shape.svg');
+  background: url('../assets/Icons/delete/Combined\ Shape.svg');
   margin: 15px 17px 0px 10.5px;
+  cursor: pointer;
 }
 
 .contact-bottom {
@@ -229,17 +254,6 @@ input {
   line-height: 22px;
   text-align: center;
   margin-bottom: 23px;
-}
-
-/* UNMARKED CONTACTS  */
-.contact-unmarked {
-  display: grid;
-  height: 150px;
-  width: 270px;
-  border: 1px solid rgba(187, 196, 195, 0.4);
-  border-radius: 4px;
-  background-color: #ffffff;
-  margin: 0px 15px 29px 15px;
 }
 
 /* ADD NEW CONTACT*/
@@ -271,7 +285,7 @@ input {
 }
 
 .upload-icon {
-  background: url('/assets/Icons/upload/Combined\ Shape.svg');
+  background: url('../assets/Icons/upload/Combined\ Shape.svg');
   height: 20px;
   width: 23px;
 }
@@ -281,7 +295,7 @@ input {
 }
 
 .arrow-back-icon {
-  background: url('/assets/Icons/arrow\ back/Combined\ Shape.svg');
+  background: url('../assets/Icons/arrow\ back/Combined\ Shape.svg');
   width: 21px;
   height: 16px;
   background-repeat: no-repeat;
@@ -337,27 +351,27 @@ input {
 }
 
 .name-icon {
-  background: url('/assets/Icons/person/Combined\ Shape.svg');
+  background: url('../assets/Icons/person/Combined\ Shape.svg');
   width: 15px;
   height: 15px;
   margin: 19px 15px 0px 0px;
 }
 
 .email-icon {
-  background: url('/assets/Icons/email/Combined\ Shape.svg');
+  background: url('../assets/Icons/email/Combined\ Shape.svg');
   height: 10px;
   width: 15px;
   margin: 19px 15px 0px 0px;
 }
 
 .phone-icon {
-  background: url('/assets/Icons/phone/Combined\ Shape.svg');
+  background: url('../assets/Icons/phone/Combined\ Shape.svg');
   width: 15px;
   height: 15px;
   margin: 20px 15px 0px 0px;
 }
 
-.remove-circle {
+.remove-number-circle {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -368,7 +382,7 @@ input {
 }
 
 .remove-number-icon {
-  background: url('/assets/Icons/remove/Combined\ Shape.svg');
+  background: url('../assets/Icons/remove/Combined\ Shape.svg');
   background-size: 8px;
   width: 8px;
   height: 8px;
@@ -393,7 +407,7 @@ input {
 }
 
 .add-number-icon {
-  background: url('/assets/Icons/remove/Combined\ Shape.svg');
+  background: url('../assets/Icons/remove/Combined\ Shape.svg');
   background-size: 8px;
   width: 8px;
   height: 8px;
