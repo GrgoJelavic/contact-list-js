@@ -138,11 +138,7 @@ function activateRemoveBtnsListeners() {
 function validateForm(newContact) {
   console.log(newContact);
   if (!newContact.fullname) {
-    alert('Full name is required, must at least 2 words.');
-    return false;
-  }
-  if (!newContact.email) {
-    alert('Email is required.');
+    alert('Full name is required, must be at least 2 words.');
     return false;
   }
 }

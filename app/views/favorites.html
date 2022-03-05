@@ -7,20 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact list</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script defer src="../js/favorites.js" type="module"></script>
 </head>
 
 <body>
-    <header>
+    <header class="">
         <div class="logo-top">
-            <!-- <a href="../../index.html"> -->
             <img src="../assets/images/logo/Shape.svg" alt="logo">
-            <!-- </a> -->
         </div>
         <div class="logo-bottom"></div>
     </header>
     <main>
+
         <nav>
-            <div>
+            <div class="">
                 <a href="../../index.html">All contacts</a>
             </div>
             <div class="line1"></div>
@@ -28,8 +28,16 @@
                 <a href="#">My favorites</a>
             </div>
         </nav>
-        <section>
-            <main>HELLO FROM MY FAVORITES</main>
+        <section class="flex">
+            <div class="search-container flex">
+                <div class="search-bar flex">
+                    <div class="search-icon"></div>
+                    <input type="text" class="search-input" id="search-filtered" />
+                </div>
+        </section>
+        <section class="flex">
+            <div class="contacts-container">
+            </div>
         </section>
     </main>
 </body>
