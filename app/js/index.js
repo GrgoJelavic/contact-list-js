@@ -4,14 +4,21 @@ let contactList = [];
 
 searchBar.addEventListener('keyup', (e) => {
   const searchInput = e.target.value.toLowerCase();
+
   const filteredContacts = contactList.filter((contact) => {
     return contact.fullname.toLowerCase().includes(searchInput);
   });
-  displayContacts(filteredContacts);
-  activateFavoriteListeners();
+  console.log(filteredContacts);
+  if (filteredContacts) {
+    displayContacts(filteredContacts);
+    activateFavoriteListeners(filteredContacts);
+    activateDeleteListeners(filteredContacts);
+    activateContactCardListeners(filteredContacts);
+  }
 });
 
 const displayContacts = (contacts) => {
+  console.log(contacts);
   contactsContainer.innerHTML = `<a class="addNew" href="./app/views/add.html">
                                     <div class="add-icon"></div>
                                     <div class=>
@@ -27,11 +34,22 @@ const displayContacts = (contacts) => {
                             ? `class="marked-heart-icon favorite"`
                             : `class="unmarked-heart-icon favorite"`
                         }></div>
-                        <div class="img-icon"></div>
+                        <div class="img-icon flex">
+                              <img src=${
+                                contact.image
+                                  ? contact.image
+                                  : '/app/assets/images/profile/empty-profile-img.png'
+                              }>
+                        </div>
                         <a href="./app/views/edit.html" class="edit-box hide">
                             <div class="edit-icon"></div>
                         </a>
                         <div class="delete-icon hide"></div>
+                        <div class="left-middle"></div>
+                        <div class="left-middle"></div>
+                        <div class="right-middle"></div>
+                        <div class="right-middle"></div>
+
                     </div>
                     <div class="contact-bottom">
                         <div class="name-output">${contact.fullname}</div>
@@ -40,11 +58,24 @@ const displayContacts = (contacts) => {
     })
     .join('');
   contactsContainer.innerHTML += htmlContactCards;
+
+  // for (i in contacts) {
+  //   console.log(i);
+  //   console.log(contacts[i].image);
+  // addImgToIcon(contacts[i].image);
+  // }
 };
 
+function addImgToIcon(imgDataUrl) {
+  //
+  imgElem.setAttribute('src', imgDataUrl);
+  document.querySelectors('.img-icon').appendChild(imgElem);
+}
 const loadContacts = async () => {
   try {
-    contactList = JSON.parse(localStorage.getItem('contactList'));
+    if (!localStorage['contactList']) localStorage.setItem('contactList', '');
+    if (localStorage['contactList'] !== '')
+      contactList = JSON.parse(localStorage['contactList']);
     displayContacts(contactList);
   } catch (err) {
     console.error(err);
@@ -99,14 +130,18 @@ function editContact(fullname) {
 }
 
 function activateDeleteListeners() {
+  let fullname;
   let deleteIcons = document.querySelectorAll('.delete-icon');
   for (let i in deleteIcons) {
-    if (deleteIcons[i].tagName == 'DIV')
+    if (deleteIcons[i].tagName == 'DIV') {
+      // console.log(deleteIcons[i].parentElement.parentElement.innerText);
       deleteIcons[i].addEventListener('click', (e) => {
-        let fullName = e.path[2].innerText;
-        // console.log(fullnamme);
-        deleteContact(fullName);
+        // console.log(e.path[2].children[1].innerText);
+        fullname = e.path[2].children[1].innerText;
+        console.log(fullname);
+        deleteContact(fullname);
       });
+    }
   }
 }
 activateDeleteListeners();
@@ -121,37 +156,66 @@ function deleteContact(fullName) {
   console.log('MODAL HAST TO BE IMPLAMENTED HERE FOR DELETE FUNC');
 }
 
-// CONTACT DETALILS > details.js
+// usable for CONTACT DETALILS > details.js
 function activateContactCardListeners() {
-  let contactCards = document.querySelectorAll('.contact-marked');
-  for (let i in contactCards) {
-    if (contactCards[i].tagName == 'DIV')
-      contactCards[i].addEventListener('click', (e) => {
-        let fullName = e.path[1].innerText;
-        getContactDetails(fullName);
+  // let contactCards = document.querySelectorAll('.contact-marked');
+  // let contactsTop = document.querySelectorAll('.img-icon');
+  let contactsBottom = document.querySelectorAll('.contact-bottom');
+  // console.log(contactsBottom)
+  for (let i in contactsBottom) {
+    if (contactsBottom[i].className == 'contact-bottom')
+      contactsBottom[i].addEventListener('click', (e) => {
+        console.log(e);
+        window.location.assign('../../app/views/details.html');
       });
   }
+  // }
+  // for (let i in contactCards) {
+  //   if (contactCards[i].tagName == 'DIV') {
+  //     console.log(contactCards[i].className);
+  //     contactCards[i].addEventListener('click', (e) => {
+  //       let fullName = e.path[1].innerText;
+
+  //       // getContactDetails(fullName);
+  //       // window.location.assign('../../app/views/details.html');
+  //     });
+  //   }
 }
 activateContactCardListeners();
 
-function getContactDetails(fullName) {
-  for (let i in contactList)
-    if (contactList[i].fullname === fullName) {
-      console.log(contactList[i].fullname);
-      console.log(contactList[i].email);
-      console.log(contactList[i].number);
-      console.log(contactList[i].cell);
-    }
-  console.log('CONTACT DETAILS HAS TO BE IMPLAMENTED');
+// function displayContactDetails() {}
+
+function getNodeIndex(elm) {
+  var c = elm.parentNode.children,
+    i = 0;
+  for (; i < c.length; i++) if (c[i] == elm) return i;
 }
+
+function addClickEventsToGridItems() {
+  let gridItems = document.getElementsByClassName('contact-top');
+  for (let i = 0; i < gridItems.length; i++) {
+    //if clasname not heart icon
+    gridItems[i].onclick = (e) => {
+      console.log(e);
+      let position = getNodeIndex(e.target);
+      console.log(position);
+      if (position !== 0 && position !== 3) {
+        // console.log(position);
+        window.location.assign('../../app/views/details.html');
+      }
+    };
+  }
+}
+addClickEventsToGridItems();
 
 // MY FAVORITES LIST > favorite.js
 let myFavorites = [];
 const loadFavorites = async () => {
   try {
-    myFavorites = JSON.parse(localStorage.getItem('contactList')).filter(
-      (contacts) => contacts.favorite === true
-    );
+    if (localStorage['contactList'])
+      myFavorites = JSON.parse(localStorage.getItem('contactList')).filter(
+        (contacts) => contacts.favorite === true
+      );
   } catch (err) {
     console.error(err);
   }
@@ -159,17 +223,18 @@ const loadFavorites = async () => {
 loadFavorites();
 console.log(myFavorites);
 
-//
 // TODO's:
-// # HOME AND ADD:
-// - heart icon change with css classes not with reload()
-// - confirmation modal on delete icon (html, css, js)
-// - improvements off add form validation (js - add con if exists)
+// # HOME:
+// - heart icon change with css classes not with reload (css)
 // - improvements off css methodologies (css)
-// - Implement PICTURE UPLOAD & STORE TO THE LOCAL STORAGE!
-// - Add and remove buttons for add form
+// - optional: confirmation modal on delete icon (html, css, js)
+// # ADD:
+// - improvements off css methodologies (css)
+// - improvements off form valdidatio with modals rather then alert (js)
+//
 // # NEXT:
 // - DETAIL VIEW (html, css, js)
 // - EDIT VIEW (html, css, js)
 // - MOBILE RESPONSIVE DESIGN (css)
-//
+// - optional personal:
+// - modular js code refactoring
