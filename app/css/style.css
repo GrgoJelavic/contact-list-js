@@ -69,9 +69,9 @@ nav > div > a {
   line-height: 22px;
 }
 
-.link > a {
-  color: var(--primaryColor);
-  line-height: 22px;
+.favorites-link > a {
+  /* color: var(--primaryColor);
+  line-height: 22px; */
 }
 
 .line1 {

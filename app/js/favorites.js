@@ -1,30 +1,28 @@
+// import { activateFavoriteListeners } from '../../app/js/index.js';
+// activateFavoriteListeners();
 const contactsContainer = document.querySelector('.contacts-container');
-const searchBar = document.querySelector('#search-input');
-let contactList = [];
+const searchBar = document.querySelector('#search-filtered');
+let favoritesList = [];
 
 searchBar.addEventListener('keyup', (e) => {
-  const searchInput = e.target.value.toLowerCase();
+  const searchFiltered = e.target.value.toLowerCase();
 
-  const filteredContacts = contactList.filter((contact) => {
-    return contact.fullname.toLowerCase().includes(searchInput);
+  const filteredContacts = favoritesList.filter((contact) => {
+    return contact.fullname.toLowerCase().includes(searchFiltered);
   });
   console.log(filteredContacts);
   if (filteredContacts) {
-    displayContacts(filteredContacts);
+    displayMyFavorites(filteredContacts);
     activateFavoriteListeners(filteredContacts);
     activateDeleteListeners(filteredContacts);
     activateContactCardListeners(filteredContacts);
+    addClickEventsToGridItems(filteredContacts);
   }
 });
 
-const displayContacts = (contacts) => {
+const displayMyFavorites = (contacts) => {
   console.log(contacts);
-  contactsContainer.innerHTML = `<a class="addNew" href="./app/views/add.html">
-                                    <div class="add-icon"></div>
-                                    <div class=>
-                                        <h4 class="add-text">Add new</h4>
-                                    </div>
-                                </a>`;
+  contactsContainer.innerHTML = '';
   const htmlContactCards = contacts
     .map((contact) => {
       return `  <div class="contact-marked">
@@ -60,17 +58,19 @@ const displayContacts = (contacts) => {
   contactsContainer.innerHTML += htmlContactCards;
 };
 
-const loadContacts = async () => {
+const loadFavorites = async () => {
   try {
     if (!localStorage['contactList']) localStorage.setItem('contactList', '');
     if (localStorage['contactList'] !== '')
-      contactList = JSON.parse(localStorage['contactList']);
-    displayContacts(contactList);
+      favoritesList = JSON.parse(localStorage.getItem('contactList')).filter(
+        (contacts) => contacts.favorite === true
+      );
+    displayMyFavorites(favoritesList);
   } catch (err) {
     console.error(err);
   }
 };
-loadContacts();
+loadFavorites();
 
 function activateFavoriteListeners() {
   let heartIcons = document.querySelectorAll('.favorite');
@@ -85,12 +85,12 @@ function activateFavoriteListeners() {
 activateFavoriteListeners();
 
 function toggleFavoriteStatus(fullName) {
-  for (let i in contactList) {
-    if (contactList[i].fullname === fullName) {
-      contactList[i].favorite === true
-        ? (contactList[i].favorite = false)
-        : (contactList[i].favorite = true);
-      localStorage.setItem('contactList', JSON.stringify(contactList));
+  for (let i in favoritesList) {
+    if (favoritesList[i].fullname === fullName) {
+      favoritesList[i].favorite === true
+        ? (favoritesList[i].favorite = false)
+        : (favoritesList[i].favorite = true);
+      localStorage.setItem('contactList', JSON.stringify(favoritesList));
       document.location.reload();
       // change icon with css not with reload()
     }
@@ -110,9 +110,9 @@ function activateEditListeners() {
 activateEditListeners();
 
 function editContact(fullname) {
-  for (let i in contactList) {
-    if (contactList[i].fullname === fullname) {
-      console.log(contactList[i]);
+  for (let i in favoritesList) {
+    if (favoritesList[i].fullname === fullname) {
+      console.log(favoritesList[i]);
       console.log('HREF -> LINK TO EDIT VIEW ~~ FORM + LOAD CONTACT DETAILS ');
     }
   }
@@ -136,11 +136,11 @@ function activateDeleteListeners() {
 activateDeleteListeners();
 
 function deleteContact(fullName) {
-  const index = contactList.findIndex((contact) => {
+  const index = favoritesList.findIndex((contact) => {
     return contact.fullname === fullName;
   });
-  contactList.splice(index, 1);
-  localStorage.setItem('contactList', JSON.stringify(contactList));
+  favoritesList.splice(index, 1);
+  localStorage.setItem('contactList', JSON.stringify(favoritesList));
   document.location.reload();
   console.log('MODAL HAST TO BE IMPLAMENTED HERE FOR DELETE FUNC');
 }
@@ -158,52 +158,28 @@ function activateContactCardListeners() {
         window.location.assign('../../app/views/details.html');
       });
   }
-  // activateContactCardListeners();
-
-  function getNodeIndex(elm) {
-    var c = elm.parentNode.children,
-      i = 0;
-    for (; i < c.length; i++) if (c[i] == elm) return i;
-  }
-
-  function addClickEventsToGridItems() {
-    let gridItems = document.getElementsByClassName('contact-top');
-    for (let i = 0; i < gridItems.length; i++) {
-      //if clasname not heart icon
-      gridItems[i].onclick = (e) => {
-        console.log(e);
-        let position = getNodeIndex(e.target);
-        console.log(position);
-        if (position !== 0 && position !== 3) {
-          // console.log(position);
-          window.location.assign('../../app/views/details.html');
-        }
-      };
-    }
-  }
-  addClickEventsToGridItems();
-
-  htmlFavorites = document.querySelector('.favorites-link');
-  htmlFavorites.addEventListener('click', () => {
-    //
-    window.location.assign('../../app/views/favorites.html');
-    // loadFavorites();
-  });
 }
-// TODO's:
-// # HOME:
-// - heart icon change with css classes not with reload (css)
-// - improvements off css methodologies (css)
-// - optional: confirmation modal on delete icon (html, css, js)
-// # ADD:
-// - improvements off css methodologies (css)
-// - improvements off add form validation. optional modals rather then alert (js)
-// # FAVORITES:
-// - implementation improvements for reusable functions (export, import, script type module, modular js)
-//
-// # NEXT:
-// - DETAIL VIEW (html, css, js)
-// - EDIT VIEW (html, css, js)
-// - MOBILE RESPONSIVE DESIGN (css)
-// - optional personal:
-// - modular js code refactoring
+activateContactCardListeners();
+
+function getNodeIndex(elm) {
+  var c = elm.parentNode.children,
+    i = 0;
+  for (; i < c.length; i++) if (c[i] == elm) return i;
+}
+
+function addClickEventsToGridItems() {
+  let gridItems = document.getElementsByClassName('contact-top');
+  for (let i = 0; i < gridItems.length; i++) {
+    //if clasname not heart icon
+    gridItems[i].onclick = (e) => {
+      console.log(e);
+      let position = getNodeIndex(e.target);
+      console.log(position);
+      if (position !== 0 && position !== 3) {
+        // console.log(position);
+        window.location.assign('../../app/views/details.html');
+      }
+    };
+  }
+}
+addClickEventsToGridItems();
