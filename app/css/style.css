@@ -69,11 +69,6 @@ nav > div > a {
   line-height: 22px;
 }
 
-.favorites-link > a {
-  /* color: var(--primaryColor);
-  line-height: 22px; */
-}
-
 .line1 {
   box-sizing: border-box;
   font-size: 12px;
@@ -342,6 +337,89 @@ input {
   display: block;
 }
 
+/* CONTACT DETAILS OUTPUT  */
+.output-container {
+  width: 630px;
+  border-top: 1px solid #2da1ad;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.num-output-container {
+  width: 630px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.details-icons {
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 75px;
+  padding-top: 80px;
+}
+
+.name-output-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.details-name > h4 {
+  margin: 60px 0px 0px 12px;
+  font-size: 28px;
+  font-weight: lighter;
+  letter-spacing: 0;
+  line-height: 34px;
+}
+
+.email-box {
+  padding: 63px 63px 20px 63px;
+}
+
+.email-box > h5 {
+  padding: 17px 0px 0px 55px;
+  font-weight: lighter;
+}
+
+.numbers-box {
+  padding: 42px 55px 20px 63px;
+  font-weight: lighter;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.numbers-values {
+  display: flex;
+  justify-content: space-between;
+}
+.numbers-values > h5 {
+  padding: 20px 0px 20px 0px;
+  display: flex;
+  font-weight: lighter;
+}
+
+.numbers-values > h4 {
+  padding: 20px 0px 20px 20px;
+  font-size: 16px;
+  font-weight: lighter;
+}
+
+.number-text {
+  display: flex;
+  padding-right: 32px;
+}
+.number-text > h4 {
+  display: flex;
+  padding: 19px 0px 0px 0px;
+  color: #2da1ad;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 19px;
+}
+
 /* NAME */
 .input-container {
   width: 630px;
@@ -351,7 +429,7 @@ input {
   flex-direction: column;
 }
 
-.header-box {
+.output .header-box {
   display: flex;
 }
 

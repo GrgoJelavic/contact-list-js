@@ -2,32 +2,35 @@ const contactsContainer = document.querySelector('.contacts-container');
 const searchBar = document.querySelector('#search-input');
 let contactList = [];
 
-searchBar.addEventListener('keyup', (e) => {
-  const searchInput = e.target.value.toLowerCase();
+if (searchBar)
+  searchBar.addEventListener('keyup', (e) => {
+    const searchInput = e.target.value.toLowerCase();
 
-  const filteredContacts = contactList.filter((contact) => {
-    return contact.fullname.toLowerCase().includes(searchInput);
+    const filteredContacts = contactList.filter((contact) => {
+      return contact.fullname.toLowerCase().includes(searchInput);
+    });
+    console.log(filteredContacts);
+    if (filteredContacts) {
+      displayContacts(filteredContacts);
+      activateFavoriteListeners(filteredContacts);
+      activateDeleteListeners(filteredContacts);
+      activateContactCardListeners(filteredContacts);
+      addClickEventsToGridItems();
+    }
   });
-  console.log(filteredContacts);
-  if (filteredContacts) {
-    displayContacts(filteredContacts);
-    activateFavoriteListeners(filteredContacts);
-    activateDeleteListeners(filteredContacts);
-    activateContactCardListeners(filteredContacts);
-  }
-});
 
 const displayContacts = (contacts) => {
   console.log(contacts);
-  contactsContainer.innerHTML = `<a class="addNew" href="./app/views/add.html">
+  if (contactsContainer) {
+    contactsContainer.innerHTML = `<a class="addNew" href="./app/views/add.html">
                                     <div class="add-icon"></div>
                                     <div class=>
                                         <h4 class="add-text">Add new</h4>
                                     </div>
                                 </a>`;
-  const htmlContactCards = contacts
-    .map((contact) => {
-      return `  <div class="contact-marked">
+    const htmlContactCards = contacts
+      .map((contact) => {
+        return `  <div class="contact-marked">
                     <div class="contact-top">
                         <div ${
                           contact.favorite
@@ -55,11 +58,11 @@ const displayContacts = (contacts) => {
                         <div class="name-output">${contact.fullname}</div>
                     </div>
                 </div>`;
-    })
-    .join('');
-  contactsContainer.innerHTML += htmlContactCards;
+      })
+      .join('');
+    contactsContainer.innerHTML += htmlContactCards;
+  }
 };
-
 const loadContacts = async () => {
   try {
     if (!localStorage['contactList']) localStorage.setItem('contactList', '');
@@ -145,51 +148,63 @@ function deleteContact(fullName) {
   console.log('MODAL HAST TO BE IMPLAMENTED HERE FOR DELETE FUNC');
 }
 
-// usable for CONTACT DETALILS > details.js
 function activateContactCardListeners() {
-  // let contactCards = document.querySelectorAll('.contact-marked');
-  // let contactsTop = document.querySelectorAll('.img-icon');
   let contactsBottom = document.querySelectorAll('.contact-bottom');
-  // console.log(contactsBottom)
+  console.log(contactsBottom);
   for (let i in contactsBottom) {
     if (contactsBottom[i].className == 'contact-bottom')
       contactsBottom[i].addEventListener('click', (e) => {
-        console.log(e);
-        window.location.assign('../../app/views/details.html');
+        console.log(e.path[2].children[1].innerText);
+        let contactDetails = e.path[2].children[1].innerText;
+        window.location.href = '../../app/views/details.html';
+        // saveContactDetails(contactDetails);
       });
   }
-  // activateContactCardListeners();
-
-  function getNodeIndex(elm) {
-    var c = elm.parentNode.children,
-      i = 0;
-    for (; i < c.length; i++) if (c[i] == elm) return i;
-  }
-
-  function addClickEventsToGridItems() {
-    let gridItems = document.getElementsByClassName('contact-top');
-    for (let i = 0; i < gridItems.length; i++) {
-      //if clasname not heart icon
-      gridItems[i].onclick = (e) => {
-        console.log(e);
-        let position = getNodeIndex(e.target);
-        console.log(position);
-        if (position !== 0 && position !== 3) {
-          // console.log(position);
-          window.location.assign('../../app/views/details.html');
-        }
-      };
-    }
-  }
-  addClickEventsToGridItems();
-
-  htmlFavorites = document.querySelector('.favorites-link');
-  htmlFavorites.addEventListener('click', () => {
-    //
-    window.location.assign('../../app/views/favorites.html');
-    // loadFavorites();
-  });
 }
+
+function getNodeIndex(elm) {
+  var c = elm.parentNode.children,
+    i = 0;
+  for (; i < c.length; i++) if (c[i] == elm) return i;
+}
+
+function addClickEventsToGridItems() {
+  let gridItems = document.getElementsByClassName('contact-top');
+  for (let i = 0; i < gridItems.length; i++) {
+    gridItems[i].onclick = (e) => {
+      let position = getNodeIndex(e.target);
+      // console.log(position);
+      if (position !== 0 && position !== 3) {
+        // console.log(position);
+        let contactDetails = e.path[2].children[1].innerText;
+        window.location.assign('../../app/views/details.html');
+        saveContactDetails(contactDetails);
+      }
+    };
+  }
+}
+function getContactDetails() {
+  activateContactCardListeners();
+  addClickEventsToGridItems();
+}
+getContactDetails();
+
+htmlFavorites = document.querySelector('.favorites-link');
+if (htmlFavorites)
+  htmlFavorites.addEventListener('click', () => {
+    window.location.assign('../../app/views/favorites.html');
+  });
+
+function saveContactDetails(fullname) {
+  const contact = contactList.find((contact) => {
+    return contact.fullname === fullname;
+  });
+  contactDetails = contact;
+  console.log(contactDetails);
+  localStorage.setItem('contactDetails', JSON.stringify(contactDetails));
+}
+//
+//
 // TODO's:
 // # HOME:
 // - heart icon change with css classes not with reload (css)
@@ -200,9 +215,9 @@ function activateContactCardListeners() {
 // - improvements off add form validation. optional modals rather then alert (js)
 // # FAVORITES:
 // - implementation improvements for reusable functions (export, import, script type module, modular js)
-//
+// - DETAILS:
+// - improvements for contact card listeners (css)
 // # NEXT:
-// - DETAIL VIEW (html, css, js)
 // - EDIT VIEW (html, css, js)
 // - MOBILE RESPONSIVE DESIGN (css)
 // - optional personal:
