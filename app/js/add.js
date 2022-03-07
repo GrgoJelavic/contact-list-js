@@ -28,14 +28,12 @@ function addContactToList() {
     let saveData = JSON.stringify(newNumber);
     contact.numbers.push(saveData);
   }
-
   console.log(contact);
   if (validateForm(contact) === false) return;
-  else {
+  else
     !localStorage['contactList']
       ? addContactToNewList(contact)
       : addContactToExistingList(contact);
-  }
 }
 
 function addContactToNewList(contact) {
@@ -45,8 +43,8 @@ function addContactToNewList(contact) {
 }
 
 function addContactToExistingList(contact) {
-  if (validateForm(contact)) return;
-  else if (!checkIfFullnameExists(contact)) {
+  if (validateForm(contact) === false);
+  if (!checkIfFullnameExists(contact)) {
     contactList = JSON.parse(localStorage.getItem('contactList'));
     contactList.push(contact);
     localStorage.setItem('contactList', JSON.stringify(contactList));

@@ -15,6 +15,7 @@ if (searchBar)
       activateFavoriteListeners(filteredContacts);
       activateDeleteListeners(filteredContacts);
       activateContactCardListeners(filteredContacts);
+      activateEditListeners(filteredContacts);
       addClickEventsToGridItems();
     }
   });
@@ -66,9 +67,10 @@ const displayContacts = (contacts) => {
 const loadContacts = async () => {
   try {
     if (!localStorage['contactList']) localStorage.setItem('contactList', '');
-    if (localStorage['contactList'] !== '')
+    if (localStorage['contactList'] !== '') {
       contactList = JSON.parse(localStorage['contactList']);
-    displayContacts(contactList);
+      await displayContacts(contactList);
+    }
   } catch (err) {
     console.error(err);
   }
@@ -85,7 +87,7 @@ function activateFavoriteListeners() {
         toggleFavoriteStatus(fullnamme);
 
         if (e.target.tagName === 'DIV') {
-          if (contactList[i].favorite === true) {
+          if (contactList[i].favorite) {
             e.target.classList.remove('unmarked-heart-icon');
             e.target.classList.add('marked-heart-icon');
           } else {
@@ -101,11 +103,11 @@ activateFavoriteListeners();
 
 function toggleFavoriteStatus(fullName) {
   for (let i in contactList) {
-    contactList[i].favorite === true
-      ? (contactList[i].favorite = false)
-      : (contactList[i].favorite = true);
+    if (contactList[i].fullname == fullName)
+      contactList[i].favorite
+        ? (contactList[i].favorite = false)
+        : (contactList[i].favorite = true);
     localStorage.setItem('contactList', JSON.stringify(contactList));
-    // document.location.reload();
   }
 }
 
@@ -217,9 +219,8 @@ function saveContactDetails(fullname) {
   localStorage.setItem('contactDetails', JSON.stringify(contactDetails));
 }
 //
-// TODO's:
+// #### TODO's:
 // # HOME:
-// - heart icon change with css classes not with reload (css)
 // - improvements off css methodologies (css)
 // - optional: confirmation modal on delete icon (html, css, js)
 // # ADD:
@@ -234,3 +235,10 @@ function saveContactDetails(fullname) {
 // - MOBILE RESPONSIVE DESIGN (css)
 // - optional personal:
 // - modular js code refactoring
+//
+// ### BUGs FIX
+// # HOME
+// - css grid on contact card
+// # FAVORITES
+// # ADD
+// - validation for full name
