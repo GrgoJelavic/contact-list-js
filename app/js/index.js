@@ -20,7 +20,7 @@ if (searchBar)
   });
 
 const displayContacts = (contacts) => {
-  console.log(contacts);
+  // console.log(contacts);
   if (contactsContainer) {
     contactsContainer.innerHTML = `<a class="addNew" href="./app/views/add.html">
                                     <div class="add-icon"></div>
@@ -44,9 +44,9 @@ const displayContacts = (contacts) => {
                                   : '/app/assets/images/profile/empty-profile-img.png'
                               }>
                         </div>
-                        <a href="./app/views/edit.html" class="edit-box hide">
+                        <div class="edit-box hide">
                             <div class="edit-icon"></div>
-                        </a>
+                        </div>
                         <div class="delete-icon hide"></div>
                         <div class="left-middle"></div>
                         <div class="left-middle"></div>
@@ -78,45 +78,58 @@ loadContacts();
 function activateFavoriteListeners() {
   let heartIcons = document.querySelectorAll('.favorite');
   for (let i in heartIcons) {
-    if (heartIcons[i].tagName == 'DIV')
+    if (heartIcons[i].tagName == 'DIV') {
+      console.log(heartIcons[i]);
       heartIcons[i].addEventListener('click', (e) => {
         let fullnamme = e.path[2].innerText;
         toggleFavoriteStatus(fullnamme);
+
+        if (e.target.tagName === 'DIV') {
+          if (contactList[i].favorite === true) {
+            e.target.classList.remove('unmarked-heart-icon');
+            e.target.classList.add('marked-heart-icon');
+          } else {
+            e.target.classList.remove('marked-heart-icon');
+            e.target.classList.add('unmarked-heart-icon');
+          }
+        }
       });
+    }
   }
 }
 activateFavoriteListeners();
 
 function toggleFavoriteStatus(fullName) {
   for (let i in contactList) {
-    if (contactList[i].fullname === fullName) {
-      contactList[i].favorite === true
-        ? (contactList[i].favorite = false)
-        : (contactList[i].favorite = true);
-      localStorage.setItem('contactList', JSON.stringify(contactList));
-      document.location.reload();
-      // change icon with css not with reload()
-    }
+    contactList[i].favorite === true
+      ? (contactList[i].favorite = false)
+      : (contactList[i].favorite = true);
+    localStorage.setItem('contactList', JSON.stringify(contactList));
+    // document.location.reload();
   }
 }
 
 function activateEditListeners() {
   let editIcons = document.querySelectorAll('.edit-icon');
+  let fullName;
   for (let i in editIcons) {
     if (editIcons[i].tagName == 'DIV')
       editIcons[i].addEventListener('click', (e) => {
-        let fullName = e.path[2].innerText;
-        editContact(fullName);
+        fullName = e.path[3].children[1].innerText;
+        console.log(fullName);
+        editContactView(fullName);
       });
   }
 }
 activateEditListeners();
 
-function editContact(fullname) {
+function editContactView(fullname) {
   for (let i in contactList) {
+    console.log(contactList[i]);
     if (contactList[i].fullname === fullname) {
-      console.log(contactList[i]);
-      console.log('HREF -> LINK TO EDIT VIEW ~~ FORM + LOAD CONTACT DETAILS ');
+      console.log(contactList[i].fullname);
+      saveContactDetails(fullname);
+      window.location.assign('../../app/views/edit.html');
     }
   }
 }
@@ -150,14 +163,14 @@ function deleteContact(fullName) {
 
 function activateContactCardListeners() {
   let contactsBottom = document.querySelectorAll('.contact-bottom');
-  console.log(contactsBottom);
+  // console.log(contactsBottom);
   for (let i in contactsBottom) {
     if (contactsBottom[i].className == 'contact-bottom')
       contactsBottom[i].addEventListener('click', (e) => {
         console.log(e.path[2].children[1].innerText);
         let contactDetails = e.path[2].children[1].innerText;
         window.location.href = '../../app/views/details.html';
-        // saveContactDetails(contactDetails);
+        saveContactDetails(contactDetails);
       });
   }
 }
@@ -203,7 +216,6 @@ function saveContactDetails(fullname) {
   console.log(contactDetails);
   localStorage.setItem('contactDetails', JSON.stringify(contactDetails));
 }
-//
 //
 // TODO's:
 // # HOME:
