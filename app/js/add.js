@@ -15,8 +15,7 @@ function jsonContact(fullname, email, img, numbers = [4]) {
 
 function addContactToList() {
   contact = new jsonContact(fullname.value, email.value, img, []);
-  console.log(img);
-  for (i = 1; i <= 4; i++) {
+  for (i = 0; i <= 4; i++) {
     let newNo = document.querySelector(`input[name='number${i}']`);
     let newCell = document.querySelector(`input[name='cell${i}']`);
     let newNumber;
@@ -32,9 +31,11 @@ function addContactToList() {
 
   console.log(contact);
   if (validateForm(contact) === false) return;
-  !localStorage['contactList']
-    ? addContactToNewList(contact)
-    : addContactToExistingList(contact);
+  else {
+    !localStorage['contactList']
+      ? addContactToNewList(contact)
+      : addContactToExistingList(contact);
+  }
 }
 
 function addContactToNewList(contact) {
@@ -44,7 +45,8 @@ function addContactToNewList(contact) {
 }
 
 function addContactToExistingList(contact) {
-  if (!checkIfFullnameExists(contact)) {
+  if (validateForm(contact)) return;
+  else if (!checkIfFullnameExists(contact)) {
     contactList = JSON.parse(localStorage.getItem('contactList'));
     contactList.push(contact);
     localStorage.setItem('contactList', JSON.stringify(contactList));
@@ -60,7 +62,7 @@ function checkIfFullnameExists(contact) {
   }
 }
 
-const displayNumberBox = (e) => {
+const displayNumberBox = () => {
   const htmlNumberBox = `<div class="number-box flex">
                               <input type="number" id="number1" name="number1" placeholder="Number" class="input-bar"
                                   type="tel" pattern="[0-9]{6,}" />
@@ -80,13 +82,10 @@ const displayNumberBox = (e) => {
                           </div>`;
   numbersContainer.innerHTML += htmlNumberBox;
   numbersContainer.innerHTML += htmlAddNumber;
-  // console.log(addNumberBtn);
 };
 displayNumberBox();
 
 function createNewNumberBox(i) {
-  console.log(i);
-
   const noBox = document.createElement('div');
   noBox.className = 'number-box flex';
   const inputNo = document.createElement('input');
@@ -113,7 +112,6 @@ function createNewNumberBox(i) {
   addNumberCtn.remove();
   numbersContainer.append(noBox);
   numbersContainer.append(addNumberCtn);
-  console.log(i);
 }
 
 const removeNumberBox = () => {
@@ -123,7 +121,7 @@ const removeNumberBox = () => {
 function activateRemoveBtnsListeners() {
   let removeBtns = document.querySelectorAll('.remove-number-circle');
   for (let i in removeBtns) {
-    console.log(i);
+    // console.log(i);
     if (removeBtns[i].tagName == 'DIV') {
       // console.log(removeBtns[i]);
       removeBtns[i].addEventListener('click', (e) => {
@@ -137,7 +135,7 @@ function activateRemoveBtnsListeners() {
 
 function validateForm(newContact) {
   console.log(newContact);
-  if (!newContact.fullname) {
+  if (!newContact.fullname && newContact.fullname.length < 5) {
     alert('Full name is required, must be at least 2 words.');
     return false;
   }
@@ -150,13 +148,13 @@ saveBtn.addEventListener('click', addContactToList);
 function activateAddNoBtns() {
   let i = 1;
   addNumberBtn.addEventListener('click', () => {
-    if (i >= 4) return;
+    if (i > 4) return;
     i++;
     createNewNumberBox(i);
-    for (j = 4; j > i; j--) activateRemoveBtnsListeners();
   });
 }
 activateAddNoBtns();
+activateRemoveBtnsListeners();
 
 function clickUploadImgEl() {
   const imgFile = document.querySelector('.add-circle');

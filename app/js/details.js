@@ -1,4 +1,5 @@
 let profileDetails = document.querySelector('#contact-details');
+let contactList = [];
 let contactDetails = [];
 
 let clearContactDetailsLocalStorage = () => {
@@ -35,9 +36,7 @@ function displayContactDetails() {
                     </div>
                     <div class="details-icons">
                         <div class="unmarked-heart-icon favorite"></div>
-                        <a href="../views/edit.html" class="">
-                            <div class="edit-icon"></div>
-                        </a>
+                        <div class="edit-icon"></div>
                     </div>
                 </div>
                 <div class="output-container">
@@ -82,6 +81,34 @@ function displayContactDetails() {
 }
 displayContactDetails();
 
+function activateEditListener() {
+  let editIcon = document.querySelector('.edit-icon');
+  let fullName;
+
+  if (editIcon.tagName == 'DIV') {
+    console.log(editIcon);
+    editIcon.addEventListener('click', (e) => {
+      console.log(e);
+      fullName = e.path[2].innerText;
+      console.log(fullName);
+      editContactView(fullName);
+    });
+  }
+}
+activateEditListener();
+
+function saveContactDetails(fullname) {
+  if (contactDetails.fullname === fullname);
+  localStorage.setItem('contactDetails', JSON.stringify(contactDetails));
+}
+
+function editContactView(fullname) {
+  if (contactDetails.fullname === fullname) {
+    saveContactDetails(fullname);
+    window.location.assign('../../app/views/edit.html');
+  }
+}
+
 let getProfileImage = function () {
   let imgCircle = document.querySelector('.add-circle');
   let profileImg = new Image();
@@ -92,3 +119,51 @@ let getProfileImage = function () {
   imgCircle.append(profileImg);
 };
 getProfileImage();
+
+function toggleDetailsFavoriteStatus(fullName) {
+  let favorite = document.querySelector('.favorite');
+
+  if (contactDetails.fullname === fullName) {
+    console.log(contactDetails);
+    contactDetails.favorite === true
+      ? (contactDetails.favorite = false)
+      : (contactDetails.favorite = true);
+    //
+    if (contactDetails.favorite === true) console.log('TRUE');
+    else console.log('FALSE');
+    //
+    const index = contactList.findIndex((contact) => {
+      return contact.fullname === fullName;
+    });
+    contactList.splice(index, 1);
+    contactList.splice(index, 0, contactDetails);
+    localStorage.setItem('contactList', JSON.stringify(contactList));
+    if (contactDetails.favorite === true)
+      favorite.className = 'favorite marked-heart-icon';
+    else favorite.className = 'favorite unmarked-heart-icon';
+  }
+}
+
+const loadContacts = async () => {
+  try {
+    if (!localStorage['contactList']) localStorage.setItem('contactList', '');
+    if (localStorage['contactList'] !== '')
+      contactList = JSON.parse(localStorage['contactList']);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+function activateFavoriteListener() {
+  console.log('CLICK');
+  loadContacts();
+  console.log(contactList);
+  let heartIcon = document.querySelector('.favorite');
+  if (heartIcon.tagName == 'DIV')
+    heartIcon.addEventListener('click', (e) => {
+      let fullnamme = e.path[2].innerText;
+      toggleDetailsFavoriteStatus(fullnamme);
+      console.log(fullnamme);
+    });
+}
+activateFavoriteListener();
