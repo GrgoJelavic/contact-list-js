@@ -35,7 +35,11 @@ function displayContactDetails() {
                         <h4>${contactDetails.fullname}</h4>
                     </div>
                     <div class="details-icons">
-                        <div class="unmarked-heart-icon favorite"></div>
+                        <div class="${
+                          contactDetails.favorite
+                            ? 'marked-heart-icon'
+                            : 'unmarked-heart-icon'
+                        } favorite"></div>
                         <div class="edit-icon"></div>
                     </div>
                 </div>
@@ -43,7 +47,9 @@ function displayContactDetails() {
                     <div class="email-box flex">
                         <div class="email-icon"></div>
                         <h4 class="header-text">email</h4>
-                        <h5 class="output-value-box">${contactDetails.email}</h5>
+                        <h5 class="output-value-box">${
+                          contactDetails.email
+                        }</h5>
                     </div>
                     <div class="numbers-box flex">
                         <div class="number-text">
