@@ -551,6 +551,20 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
+.input-bar.success input {
+  border-color: var(--primaryColor);
+}
+
+.err-msg {
+  display: inline-block;
+}
+
+.error {
+  color: red;
+  font-size: 9px;
+  height: 13px;
+}
+
 .buttons {
   display: flex;
   justify-content: space-between;
