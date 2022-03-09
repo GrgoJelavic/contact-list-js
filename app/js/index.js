@@ -67,7 +67,7 @@ const displayContacts = (contacts) => {
 const loadContacts = async () => {
   try {
     if (!localStorage['contactList']) localStorage.setItem('contactList', '');
-    if (localStorage['contactList'] !== '') {
+    else {
       contactList = JSON.parse(localStorage['contactList']);
       await displayContacts(contactList);
     }
@@ -81,19 +81,16 @@ function activateFavoriteListeners() {
   let heartIcons = document.querySelectorAll('.favorite');
   for (let i in heartIcons) {
     if (heartIcons[i].tagName == 'DIV') {
-      console.log(heartIcons[i]);
+      // console.log(heartIcons[i]);
       heartIcons[i].addEventListener('click', (e) => {
         let fullnamme = e.path[2].innerText;
         toggleFavoriteStatus(fullnamme);
-
-        if (e.target.tagName === 'DIV') {
-          if (contactList[i].favorite) {
-            e.target.classList.remove('unmarked-heart-icon');
-            e.target.classList.add('marked-heart-icon');
-          } else {
-            e.target.classList.remove('marked-heart-icon');
-            e.target.classList.add('unmarked-heart-icon');
-          }
+        if (contactList[i].favorite) {
+          e.target.classList.remove('unmarked-heart-icon');
+          e.target.classList.add('marked-heart-icon');
+        } else {
+          e.target.classList.remove('marked-heart-icon');
+          e.target.classList.add('unmarked-heart-icon');
         }
       });
     }
@@ -117,6 +114,7 @@ function activateEditListeners() {
   for (let i in editIcons) {
     if (editIcons[i].tagName == 'DIV')
       editIcons[i].addEventListener('click', (e) => {
+        console.log(e);
         fullName = e.path[3].children[1].innerText;
         console.log(fullName);
         editContactView(fullName);
@@ -229,7 +227,7 @@ function saveContactDetails(fullname) {
 // # FAVORITES:
 // - implementation improvements for reusable functions (export, import, script type module, modular js)
 // - DETAILS:
-// - improvements for contact card listeners (css)
+// - improvements for contact card listeners (css grid)
 // # NEXT:
 // - EDIT VIEW (html, css, js)
 // - MOBILE RESPONSIVE DESIGN (css)
@@ -240,5 +238,14 @@ function saveContactDetails(fullname) {
 // # HOME
 // - css grid on contact card
 // # FAVORITES
+// - css grid on contact card
 // # ADD
-// - validation for full name
+// - validation for full name, email and number
+// - add icons inside top div
+// - improvements for add number style
+// - cancel button css
+// # EDIT
+// - validation for full name, email and number
+// - number underline css
+// - improvements for add number style
+// - cancel button css

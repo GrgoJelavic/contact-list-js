@@ -14,11 +14,11 @@ searchBar.addEventListener('keyup', (e) => {
   console.log(filteredContacts);
   if (filteredContacts) {
     displayMyFavorites(filteredContacts);
-    activateFavoriteListeners(filteredContacts);
     activateDeleteListeners(filteredContacts);
     activateEditListeners(filteredContacts);
     activateContactCardListeners(filteredContacts);
     addClickEventsToGridItems(filteredContacts);
+    activateFavoriteListeners(filteredContacts);
   }
 });
 
@@ -157,7 +157,7 @@ function toggleFavoriteStatus(fullName) {
         : (contactList[i].favorite = true);
   }
   localStorage.setItem('contactList', JSON.stringify(contactList));
-  if (searchBar.inner !== '') document.location.reload();
+  if (!searchBar.inner) document.location.reload();
 }
 
 function activateEditListeners() {
@@ -166,7 +166,7 @@ function activateEditListeners() {
   for (let i in editIcons) {
     if (editIcons[i].tagName == 'DIV')
       editIcons[i].addEventListener('click', (e) => {
-        fullName = e.path[2].innerText;
+        fullName = e.path[3].innerText;
         editContact(fullName);
         window.location.assign('../views/edit.html');
       });

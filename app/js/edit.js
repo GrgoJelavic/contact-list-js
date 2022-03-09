@@ -45,7 +45,7 @@ let inputProfileImage = function () {
   });
 };
 
-function jsonContact(fullname, email, img, numbers = [4]) {
+function jsonContact(fullname, email, img, numbers = [20]) {
   this.fullname = fullname;
   this.email = email;
   this.favorite = false;

@@ -1,3 +1,4 @@
+const addForm = document.querySelector('#addForm');
 const cancelBtn = document.querySelector('.cancel-button');
 const saveBtn = document.querySelector('.save-button');
 let numbersContainer = document.querySelector('.numbers-container');
@@ -5,7 +6,7 @@ let contactList = [];
 let contact = {};
 let img;
 
-function jsonContact(fullname, email, img, numbers = [4]) {
+function jsonContact(fullname, email, img, numbers = []) {
   this.fullname = fullname;
   this.email = email;
   this.favorite = false;
@@ -28,48 +29,34 @@ function addContactToList() {
     let saveData = JSON.stringify(newNumber);
     contact.numbers.push(saveData);
   }
-  console.log(contact);
-  if (validateForm(contact) === false) return;
-  else
-    !localStorage['contactList']
-      ? addContactToNewList(contact)
-      : addContactToExistingList(contact);
+  !localStorage['contactList']
+    ? addContactToNewList(contact)
+    : addContactToExistingList(contact);
 }
 
 function addContactToNewList(contact) {
-  // console.log(contact);
   contactList.push(contact);
   localStorage.setItem('contactList', JSON.stringify(contactList));
+  window.location.assign('../../index.html');
 }
 
 function addContactToExistingList(contact) {
-  if (validateForm(contact) === false);
-  if (!checkIfFullnameExists(contact)) {
-    contactList = JSON.parse(localStorage.getItem('contactList'));
-    contactList.push(contact);
-    localStorage.setItem('contactList', JSON.stringify(contactList));
-  } else alert('Full name already exists in Contact list.');
-}
-
-function checkIfFullnameExists(contact) {
-  for (let i in contactList) {
-    if (
-      contactList[i].fullname.toLowerCase() === contact.fullname.toLowerCase()
-    )
-      return true;
-  }
+  contactList = JSON.parse(localStorage.getItem('contactList'));
+  contactList.push(contact);
+  localStorage.setItem('contactList', JSON.stringify(contactList));
+  window.location.assign('../../index.html');
 }
 
 const displayNumberBox = () => {
   const htmlNumberBox = `<div class="number-box flex">
-                              <input type="number" id="number1" name="number1" placeholder="Number" class="input-bar"
+                              <input type="number" id="number0" name="number0" placeholder="Number" class="input-bar"
                                   type="tel" pattern="[0-9]{6,}" />
-                              <input type="text" name="cell1" id="cell1" placeholder="Cell" class="source-number" />
+                              <input type="text" name="cell0" id="cell0" placeholder="Cell" class="source-number" />
                               <div class="remove-number-circle flex">
                                   <div class="remove-number-icon">
                                   </div>
                               </div>
-                          </div>'`;
+                         </div>`;
   const htmlAddNumber = `<div class="add-number-container">
                               <div class="add-number-circle flex">
                                   <div class="add-number-icon"></div>
@@ -112,47 +99,57 @@ function createNewNumberBox(i) {
   numbersContainer.append(addNumberCtn);
 }
 
-const removeNumberBox = () => {
-  addNumberCtn.remove();
-};
-
 function activateRemoveBtnsListeners() {
   let removeBtns = document.querySelectorAll('.remove-number-circle');
+  lastEl = removeBtns.length - 1;
   for (let i in removeBtns) {
-    // console.log(i);
-    if (removeBtns[i].tagName == 'DIV') {
-      // console.log(removeBtns[i]);
-      removeBtns[i].addEventListener('click', (e) => {
-        // console.log(removeBtns[i].parentElement);
-        if (removeBtns[i] !== 0) removeBtns[i].parentElement.remove();
-        // removeNumberBox();
+    console.log(removeBtns[i].className);
+    if (removeBtns[i].tagName === 'DIV') {
+      removeBtns[i].addEventListener('click', () => {
+        console.log(removeBtns[i].parentElement.children[0].name);
+        if (removeBtns[i].parentElement.children[0].name == 'number0') {
+          removeBtns[i].parentElement.children[0].value = null;
+          removeBtns[i].parentElement.children[1].value = null;
+          return;
+        } else if (
+          removeBtns[lastEl].parentElement.children[0].value ||
+          removeBtns[lastEl].parentElement.children[0].value
+        ) {
+          removeBtns[lastEl].parentElement.children[0].value = null;
+          removeBtns[lastEl].parentElement.children[1].value = null;
+        } else removeBtns[lastEl].parentElement.remove();
       });
     }
   }
 }
 
-function validateForm(newContact) {
-  console.log(newContact);
-  if (!newContact.fullname && newContact.fullname.length < 5) {
-    alert('Full name is required, must be at least 2 words.');
-    return false;
-  }
-}
-
-let addNumberBtn = document.querySelector('.add-number-circle');
-let removeNumberBtns = document.querySelectorAll('.remove-number-circle');
-saveBtn.addEventListener('click', addContactToList);
-
 function activateAddNoBtns() {
-  let i = 1;
-  addNumberBtn.addEventListener('click', () => {
-    if (i > 4) return;
+  const addNumberBtn = document.querySelector('.add-number-circle');
+  let i = 0;
+  addNumberBtn.addEventListener('click', (e) => {
+    let prevNumValue, prevCellValue;
+    if (e.path[2].className === 'numbers-container') {
+      i = e.path[3].children[1].children.length - 2;
+      prevNumValue = e.path[3].children[1].children[i].children[0].value;
+      prevCellValue = e.path[3].children[1].children[i].children[1].value;
+    }
+    if (e.path[3].className === 'numbers-container') {
+      i = e.path[4].children[1].children.length - 2;
+      prevNumValue = e.path[4].children[1].children[i].children[0].value;
+      prevCellValue = e.path[4].children[1].children[i].children[1].value;
+    }
+    if (!prevNumValue) return;
+    if (!prevCellValue) return;
+    if (i >= 4) {
+      i = e.path[3].children[1].children.length - 2;
+      return;
+    }
     i++;
     createNewNumberBox(i);
+    activateRemoveBtnsListeners();
   });
 }
 activateAddNoBtns();
-activateRemoveBtnsListeners();
 
 function clickUploadImgEl() {
   const imgFile = document.querySelector('.add-circle');
@@ -178,3 +175,97 @@ let inputProfileImage = function () {
   });
 };
 inputProfileImage();
+
+const loadContacts = () => {
+  try {
+    if (!localStorage['contactList']) localStorage.setItem('contactList', '');
+    else contactList = JSON.parse(localStorage['contactList']);
+  } catch (err) {
+    console.error(err);
+  }
+};
+loadContacts();
+
+const setError = (element, message) => {
+  if (element) {
+    const inputBar = element.parentElement;
+    const errDisplay = inputBar.querySelector('.err-msg');
+    errDisplay.innerText = message;
+    errDisplay.classList.add('error');
+    errDisplay.classList.remove('succes');
+    return false;
+  }
+};
+
+const setSucces = (element) => {
+  if (element) {
+    const inputBar = element.parentElement;
+    const errDisplay = inputBar.querySelector('.err-msg');
+    errDisplay.innerHTML = '';
+    errDisplay.classList.add('succes');
+    errDisplay.classList.remove('error');
+    return true;
+  }
+};
+
+const checkIfFullnameExists = (fullname) => {
+  for (let i in contactList)
+    if (contactList[i].fullname.toLowerCase() === fullname.toLowerCase())
+      return true;
+};
+
+const checkIfEmailExists = (email) => {
+  for (let i in contactList)
+    if (contactList[i].email.toLowerCase() === email.toLowerCase()) return true;
+};
+
+const isValidFullName = (fullname) => {
+  const reg = /^([\w]{2,})+\s+([\w\s]{2,})+$/i;
+  return reg.test(String(fullname));
+};
+
+const isValidEmail = (email) => {
+  const reg =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return reg.test(String(email).toLowerCase());
+};
+
+const validateEmail = () => {
+  const email = document.querySelector('#email');
+  if (email.value)
+    if (!isValidEmail(email.value)) {
+      setError(email, 'Please input correct e-mail address.');
+      return false;
+    } else if (checkIfEmailExists(email.value)) {
+      setError(email, 'This e-mail already exists in the contact list.');
+      return false;
+    } else {
+      setSucces();
+      return true;
+    }
+};
+
+const validateFullName = () => {
+  const fullName = document.querySelector('#fullname');
+  if (fullName.value === '') {
+    setError(fullName, 'Full name is required.');
+    return false;
+  } else if (!isValidFullName(fullName.value)) {
+    setError(fullName, 'Please input correct first name and last name.');
+    return false;
+  } else if (checkIfFullnameExists(fullName.value)) {
+    setError(fullName, 'This contact already exists in the contact list.');
+    return false;
+  } else {
+    setSucces();
+    return true;
+  }
+};
+
+addForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  // if (validateEmail() === false) return;
+  if (validateFullName())
+    if (validateEmail() === false) return;
+    else addContactToList();
+});
