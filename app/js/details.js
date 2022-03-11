@@ -2,22 +2,14 @@ let profileDetails = document.querySelector('#contact-details');
 let contactList = [];
 let contactDetails = [];
 
-let clearContactDetailsLocalStorage = () => {
-  if (localStorage['contactDetails']) localStorage.removeItem('contactDetails');
-};
-
 function displayContactDetails() {
   let numObjectsArray = [];
   let htmlNumBoxes;
-
   if (localStorage['contactDetails'])
     contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
-  clearContactDetailsLocalStorage();
-
   for (let i in contactDetails.numbers)
     if (contactDetails.numbers[i])
-      numObjectsArray.push(JSON.parse(contactDetails.numbers[i]));
-
+      numObjectsArray.push(contactDetails.numbers[i]);
   if (contactDetails)
     profileDetails.innerHTML += `
           <div class="left-section">
@@ -61,13 +53,9 @@ function displayContactDetails() {
                     </div>
                 </div>
             </div>`;
-
   htmlNumBoxes = numObjectsArray
     .map((num) => {
       if (num.number && num.cell) {
-        console.log(typeof num);
-        console.log(typeof num.cell);
-        console.log(num.number);
         return `<div class="number-boxes-container">
                     <div class="numbers-values">
                         <h5 class="output-value-box">${
@@ -80,7 +68,6 @@ function displayContactDetails() {
       }
     })
     .join('');
-
   let numBoxContainer = document.querySelector('.number-boxes-container');
   numBoxContainer.innerHTML += htmlNumBoxes;
   profileDetails += numBoxContainer;
@@ -90,13 +77,9 @@ displayContactDetails();
 function activateEditListener() {
   let editIcon = document.querySelector('.edit-icon');
   let fullName;
-
   if (editIcon.tagName == 'DIV') {
-    console.log(editIcon);
     editIcon.addEventListener('click', (e) => {
-      console.log(e);
       fullName = e.path[2].innerText;
-      console.log(fullName);
       editContactView(fullName);
     });
   }
@@ -128,16 +111,10 @@ getProfileImage();
 
 function toggleDetailsFavoriteStatus(fullName) {
   let favorite = document.querySelector('.favorite');
-
   if (contactDetails.fullname === fullName) {
-    console.log(contactDetails);
     contactDetails.favorite === true
       ? (contactDetails.favorite = false)
       : (contactDetails.favorite = true);
-    //
-    if (contactDetails.favorite === true) console.log('TRUE');
-    else console.log('FALSE');
-    //
     const index = contactList.findIndex((contact) => {
       return contact.fullname === fullName;
     });
@@ -161,15 +138,12 @@ const loadContacts = async () => {
 };
 
 function activateFavoriteListener() {
-  console.log('CLICK');
   loadContacts();
-  console.log(contactList);
   let heartIcon = document.querySelector('.favorite');
   if (heartIcon.tagName == 'DIV')
     heartIcon.addEventListener('click', (e) => {
       let fullnamme = e.path[2].innerText;
       toggleDetailsFavoriteStatus(fullnamme);
-      console.log(fullnamme);
     });
 }
 activateFavoriteListener();
