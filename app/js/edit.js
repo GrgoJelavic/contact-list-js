@@ -1,14 +1,10 @@
 let profileDetails = document.querySelector('#edit-details');
 let contactList = [];
 let contactDetails = [];
-let contact = {};
+let editedContact = {};
 let img;
 
-let clearContactDetailsLocalStorage = () => {
-  if (localStorage['contactDetails']) localStorage.removeItem('contactDetails');
-};
-
-let getProfileImageIfExists = function () {
+let getProfileImageIfExists = () => {
   let imgCircle = document.querySelector('.add-circle');
   if (contactDetails.image) {
     let profileImg = new Image();
@@ -27,10 +23,11 @@ function clickUploadImgEl() {
     });
 }
 
-let inputProfileImage = function () {
+let inputProfileImage = () => {
   let uploadCircle = document.querySelector('.add-circle');
   let profileImg;
   document.querySelector('#upfile').addEventListener('change', function (e) {
+    // console.log(e);
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       img = reader.result;
@@ -39,13 +36,16 @@ let inputProfileImage = function () {
       profileImg.className = 'uploaded-image';
       uploadCircle.append(profileImg);
       document.querySelector('.uploaded-image').remove();
-      //   document.querySelector('.uploaded-icon').remove();
     });
     reader.readAsDataURL(this.files[0]);
   });
 };
 
-function jsonContact(fullname, email, img, numbers = [20]) {
+let clearContactDetailsLocalStorage = () => {
+  if (localStorage['contactDetails']) localStorage.removeItem('contactDetails');
+};
+
+function jsonContact(fullname, email, img, numbers = []) {
   this.fullname = fullname;
   this.email = email;
   this.favorite = false;
@@ -56,16 +56,13 @@ function jsonContact(fullname, email, img, numbers = [20]) {
 function displayEditFormDetails() {
   let numObjectsArray = [];
   let htmlNumBoxes;
-
   if (localStorage['contactDetails'])
     contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
-  clearContactDetailsLocalStorage();
-
+  // clearContactDetailsLocalStorage();
   for (let i in contactDetails.numbers) {
     if (contactDetails.numbers[i])
-      numObjectsArray.push(JSON.parse(contactDetails.numbers[i]));
+      numObjectsArray.push(contactDetails.numbers[i]);
   }
-
   if (contactDetails)
     profileDetails.innerHTML += `<div class="left-section">
                                     <div class="add-circle flex">
@@ -76,27 +73,37 @@ function displayEditFormDetails() {
                                     </div>
                                 </div>
                                 <div class=" right-section">
-                                    <a href='../../index.html'>
-                                        <div class="arrow-back-icon"></div>
-                                    </a>
+                                    <div class="name-output-container">
+                                        <div class="details-name flex">
+                                            <a href='../../index.html'>
+                                                <div class="arrow-back-icon"></div>
+                                            </a>
+                                            <h4>${contactDetails.fullname}</h4>
+                                            <label>Delete</label>
+                                            <div class="delete-icon"></div>
+                                        </div>
+                                    </div>
+                                    <form id="editForm" name="editForm">
                                         <div class=" input-container">
                                             <div class="header-box flex">
                                                 <div class="name-icon"></div>
-                                                <h4 class="header-text">full name</h4>
+                                                <hlabel for="fullname" class="header-text">full name</label>
                                             </div>
-                                            <input name="fullname" id="fullname" placeholder="${contactDetails.fullname}" value="${contactDetails.fullname}" class="input-bar">
+                                            <input name="fullname" id="fullname" placeholder="${contactDetails.fullname}" class="input-bar">
+                                            <div class="err-msg err-name"></div>
                                         </div>
                                         <div class="input-container">
                                             <div class="header-box flex">
                                                 <div class="email-icon"></div>
-                                                <h4 class="header-text">email</h4>
+                                                <label for="email "class="header-text">email</label>
                                             </div>
-                                            <input type="email" name="email" id="email" placeholder="${contactDetails.email}" value="${contactDetails.email}" class="input-bar">
+                                            <input name="email" id="email" placeholder="${contactDetails.email}" class="input-bar">
+                                            <div class="err-msg err-mail"></div>
                                         </div>
                                         <div class="input-container">
                                             <div class="header-box flex">
                                                 <div class="phone-icon"></div>
-                                                <h4 class="header-text">numbers</h4>
+                                                <label class="header-text">numbers</label>
                                             </div>
                                             <div class="numbers-container">
                                             </div>
@@ -107,25 +114,19 @@ function displayEditFormDetails() {
                                                     <h4>Cancel</h4>
                                                 </div>
                                             </a>
-                                            <button form="addForm" type="submit" class="save-button" value="save">Save</button>
+                                            <button form="addForm" type="submit" class="save-button" value="submit">Save</button>
                                         </div>
+                                     </form> 
                                 </div>`;
   let numBoxContainer = document.querySelector('.numbers-container');
-  let cnt = 0;
-  for (let i in contactDetails.numbers) {
-    if (contactDetails.numbers[i]) cnt++;
-  }
-  console.log(cnt);
-  i = cnt + 1;
+  i = -1;
   htmlNumBoxes = numObjectsArray
     .map((num) => {
-      //   console.log(num);
       if (num.number && num.cell) {
         i++;
         return `<div class="number-box flex">
-                    <input type="number" id="number${i}" name="number${i}" value="${num.number}" placeholder="+${num.number}" class="input-bar"
-                        type="tel" pattern="[0-9]{6,}" />
-                    <input type="text" name="cell${i}" id="cell${i}" value="${num.cell}" placeholder="+${num.cell}" class="source-number" />
+                    <input type="text" id="number${i}" name="number${i}" placeholder="+${num.number}" class="input-bar"/>
+                    <input type="text" name="cell${i}" id="cell${i}" placeholder="${num.cell}" class="source-number" />
                     <div class="remove-number-circle flex">
                         <div class="remove-number-icon"></div>
                     </div>          
@@ -141,7 +142,6 @@ function displayEditFormDetails() {
                                     <h4 class="add-number-text">Add number</h4>
                                 </div>
                             </div>`;
-
   if (numBoxContainer) {
     numBoxContainer.innerHTML += htmlNumBoxes;
     numBoxContainer.innerHTML += htmlAddNumber;
@@ -154,34 +154,48 @@ clickUploadImgEl();
 inputProfileImage();
 
 function editContactinTheList() {
-  contact = new jsonContact(fullname.value, email.value, img, []);
+  editedContact = new jsonContact(
+    fullname.value,
+    email.value,
+    img,
+    (numbers = [])
+  );
+  const index = contactList.findIndex((contact) => {
+    return contact.fullname === contactDetails.fullname;
+  });
+  // editedContact.image = getProfileImageIfExists();
+  for (i in contactList)
+    if (contactList[i].fullname === contactDetails.fullname) {
+      if (editedContact.fullname !== '')
+        contactDetails.fullname = editedContact.fullname;
+      if (editedContact.email !== '')
+        contactDetails.email = editedContact.email;
+      if (editedContact.image) contactDetails.image = editedContact.image;
+    }
 
   for (i = 0; i <= 4; i++) {
     let newNo = document.querySelector(`input[name='number${i}']`);
     let newCell = document.querySelector(`input[name='cell${i}']`);
     let newNumber;
-    console.log(newNo);
-    if (newNo !== null && !newCell !== null) {
+    if (newNo && newCell && newNo.value !== '' && newCell.value !== '') {
       newNumber = {
         number: newNo.value,
         cell: newCell.value,
       };
+      if (contactDetails.numbers[i]) contactDetails.numbers[i] = newNumber;
     }
-    console.log(newNumber);
-    let saveData = JSON.stringify(newNumber);
-    contact.numbers.push(saveData);
+    editedContact.numbers.push(newNumber);
   }
-  contact.image = getProfileImageIfExists();
-  console.log(contact);
-  console.log(contactDetails);
-  console.log(contactList);
-  localStorage.setItem('Test', contact);
-  console.log(img);
-  //   console.log(contact);
-  //   if (validateForm(contact) === false) return;
-  //   !localStorage['contactList']
-  //     ? addContactToNewList(contact)
-  //     : addContactToExistingList(contact);
+  if (editedContact.fullname !== '') if (validateFullName() === false) return;
+  if (editedContact.email !== '') if (validateEmail() === false) return;
+  for (n in editedContact.numbers)
+    if (editedContact.numbers[n])
+      contactDetails.numbers.push(editedContact.numbers[n]);
+
+  contactList.splice(index, 1);
+  contactList.unshift(contactDetails);
+  localStorage.setItem('contactList', JSON.stringify(contactList));
+  window.location.assign('../../index.html');
 }
 
 function createNewNumberBox(i) {
@@ -200,7 +214,7 @@ function createNewNumberBox(i) {
   inputCell.name = `cell${i}`;
   inputCell.placeholder = `Cell`;
   inputCell.id = `cell${i}`;
-  let removeBtn = document.createElement('div');
+  const removeBtn = document.createElement('div');
   removeBtn.className = 'remove-number-circle flex';
   const removeIcon = document.createElement('div');
   removeIcon.className = 'remove-number-icon';
@@ -228,26 +242,183 @@ loadContacts();
 const saveBtn = document.querySelector('.save-button');
 saveBtn.addEventListener('click', editContactinTheList);
 
-function activateAddNoBtns() {
-  let addNumberBtn = document.querySelector('.add-number-circle');
-  let i = 0;
-  addNumberBtn.addEventListener('click', () => {
-    if (i >= 4) return;
-    i++;
-    console.log(i);
-    createNewNumberBox(i);
-  });
-}
-activateAddNoBtns();
-
 function activateRemoveBtnsListeners() {
   let removeBtns = document.querySelectorAll('.remove-number-circle');
   for (let i in removeBtns) {
-    if (removeBtns[i].tagName == 'DIV') {
+    if (removeBtns[i].tagName === 'DIV') {
       removeBtns[i].addEventListener('click', () => {
-        if (removeBtns[i] !== 0) removeBtns[i].parentElement.remove();
+        if (
+          removeBtns[i].parentElement.children[0].value ||
+          removeBtns[i].parentElement.children[0].value
+        ) {
+          removeBtns[i].parentElement.children[0].value = null;
+          removeBtns[i].parentElement.children[1].value = null;
+        } else {
+          removeBtns[i].parentElement.remove();
+          contactDetails.numbers.splice(i, 1);
+        }
       });
     }
   }
 }
 activateRemoveBtnsListeners();
+
+function activateAddNoBtns() {
+  const addNumberBtn = document.querySelector('.add-number-circle');
+  const existingItems = document.querySelectorAll('.remove-number-circle');
+  let i;
+  i = existingItems.length;
+  addNumberBtn.addEventListener('click', (e) => {
+    let prevNumValue, prevCellValue;
+    if (i === 0) createNewNumberBox(i);
+    if (e.path[2].className === 'numbers-container') {
+      i = e.path[3].children[1].children.length - 2;
+      prevNumValue = e.path[3].children[1].children[i].children[0].value;
+      prevCellValue = e.path[3].children[1].children[i].children[1].value;
+    }
+    if (e.path[3].className === 'numbers-container') {
+      i = e.path[4].children[1].children.length - 2;
+      prevNumValue = e.path[4].children[1].children[i].children[0].value;
+      prevCellValue = e.path[4].children[1].children[i].children[1].value;
+    }
+    if (i >= existingItems.length) {
+      if (!prevNumValue) return;
+      if (!prevCellValue) return;
+    }
+    if (i >= 4) {
+      i = e.path[3].children[1].children.length - 1;
+      return;
+    }
+    i++;
+    createNewNumberBox(i);
+    activateRemoveBtnsListeners();
+  });
+}
+activateAddNoBtns();
+
+const setError = (element, message) => {
+  if (element) {
+    const inputBar = element.parentElement;
+    const errDisplay = inputBar.querySelector('.err-msg');
+    errDisplay.innerText = message;
+    errDisplay.classList.add('error');
+    errDisplay.classList.remove('success');
+    return false;
+  }
+};
+
+const setSucces = (element) => {
+  if (element) {
+    const inputBar = element.parentElement;
+    const errDisplay = inputBar.querySelector('.err-msg');
+    errDisplay.innerHTML = '';
+    errDisplay.classList.add('success');
+    errDisplay.classList.remove('error');
+    return true;
+  }
+};
+
+const checkIfFullnameExists = (fullname) => {
+  for (let i in contactList)
+    if (contactList[i].fullname.toLowerCase() === fullname.toLowerCase())
+      return true;
+};
+
+const checkIfEmailExists = (email) => {
+  for (let i in contactList)
+    if (contactList[i].email.toLowerCase() === email.toLowerCase()) return true;
+};
+
+const isValidFullName = (fullname) => {
+  const reg = /^([\w]{2,})+\s+([\w\s]{2,})+$/i;
+  return reg.test(fullname);
+};
+
+const isValidEmail = (email) => {
+  const reg =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return reg.test(String(email).toLowerCase());
+};
+
+const isValidNumber = (number) => {
+  const reg = /^(?=.*\d)[\d ]+$/;
+  return reg.test(number);
+};
+
+const validatePhoneNumber = () => {
+  const addNo = document.querySelector('.add-number-container');
+
+  let contactNo;
+  for (i = 0; i < 5; i++) {
+    contactNo = document.querySelector(`#number${i}`);
+    if (contactNo) if (!contactNo.value) return;
+    if (contactNo.value.length < 11) {
+      setError(
+        addNo,
+        'Please include country and city in the number (example: 385 21 021 021 38598887777).'
+      );
+      return false;
+    } else if (!isValidNumber(contactNo.value)) {
+      setError(
+        addNo,
+        'Please input correct phone format (example: 385 21 021 021 38598887777).'
+      );
+      return false;
+    } else {
+      setSucces();
+      return true;
+    }
+  }
+};
+
+const validateEmail = () => {
+  const email = document.querySelector('#email');
+  if (email.value)
+    if (!isValidEmail(email.value)) {
+      setError(email, 'Please input correct e-mail address.');
+      return false;
+    } else if (checkIfEmailExists(email.value)) {
+      setError(email, 'This e-mail already exists in the contact list.');
+      return false;
+    } else {
+      setSucces();
+      return true;
+    }
+};
+
+const validateFullName = () => {
+  const fullName = document.querySelector('#fullname');
+  if (fullName.value === '') {
+    setError(fullName, 'Full name is required.');
+    return false;
+  } else if (!isValidFullName(fullName.value)) {
+    setError(fullName, 'Please input correct first name and last name.');
+    return false;
+  } else if (checkIfFullnameExists(fullName.value)) {
+    setError(fullName, 'This contact already exists in the contact list.');
+    return false;
+  } else {
+    setSucces();
+    setError(email, null);
+    return true;
+  }
+};
+
+function activateDeleteListener() {
+  let deleteIcon = document.querySelector('.delete-icon');
+  deleteIcon.addEventListener('click', () => {
+    deleteContact();
+    window.location.assign('../../index.html');
+  });
+}
+activateDeleteListener();
+
+function deleteContact() {
+  const index = contactList.findIndex((contact) => {
+    return contact.fullname === contactDetails.fullname;
+  });
+  contactList.splice(index, 1);
+  localStorage.setItem('contactList', JSON.stringify(contactList));
+  document.location.reload();
+  console.log('MODAL HAS TO BE IMPLAMENTED HERE FOR DELETE!');
+}

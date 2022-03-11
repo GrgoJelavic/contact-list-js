@@ -21,7 +21,6 @@ if (searchBar)
   });
 
 const displayContacts = (contacts) => {
-  // console.log(contacts);
   if (contactsContainer) {
     contactsContainer.innerHTML = `<a class="addNew" href="./app/views/add.html">
                                     <div class="add-icon"></div>
@@ -81,7 +80,6 @@ function activateFavoriteListeners() {
   let heartIcons = document.querySelectorAll('.favorite');
   for (let i in heartIcons) {
     if (heartIcons[i].tagName == 'DIV') {
-      // console.log(heartIcons[i]);
       heartIcons[i].addEventListener('click', (e) => {
         let fullnamme = e.path[2].innerText;
         toggleFavoriteStatus(fullnamme);
@@ -139,9 +137,7 @@ function activateDeleteListeners() {
   let deleteIcons = document.querySelectorAll('.delete-icon');
   for (let i in deleteIcons) {
     if (deleteIcons[i].tagName == 'DIV') {
-      // console.log(deleteIcons[i].parentElement.parentElement.innerText);
       deleteIcons[i].addEventListener('click', (e) => {
-        // console.log(e.path[2].children[1].innerText);
         fullname = e.path[2].children[1].innerText;
         console.log(fullname);
         deleteContact(fullname);
@@ -176,7 +172,7 @@ function activateContactCardListeners() {
 }
 
 function getNodeIndex(elm) {
-  var c = elm.parentNode.children,
+  let c = elm.parentNode.children,
     i = 0;
   for (; i < c.length; i++) if (c[i] == elm) return i;
 }
@@ -196,6 +192,7 @@ function addClickEventsToGridItems() {
     };
   }
 }
+
 function getContactDetails() {
   activateContactCardListeners();
   addClickEventsToGridItems();
@@ -219,17 +216,19 @@ function saveContactDetails(fullname) {
 //
 // #### TODO's:
 // # HOME:
-// - improvements off css methodologies (css)
-// - optional: confirmation modal on delete icon (html, css, js)
+// - improve css & mobile responsive
+// - optional: confirmation modal on delete icon
 // # ADD:
-// - improvements off css methodologies (css)
-// - improvements off add form validation. optional modals rather then alert (js)
+// - improve css & mobile responsive
+// - improvements for profile picture upload validation
 // # FAVORITES:
-// - implementation improvements for reusable functions (export, import, script type module, modular js)
+// - improveme structure for reusable function
 // - DETAILS:
 // - improvements for contact card listeners (css grid)
-// # NEXT:
 // - EDIT VIEW (html, css, js)
+// - edit profile picture
+// - delete icon
+// # NEXT:
 // - MOBILE RESPONSIVE DESIGN (css)
 // - optional personal:
 // - modular js code refactoring
@@ -237,15 +236,17 @@ function saveContactDetails(fullname) {
 // ### BUGs FIX
 // # HOME
 // - css grid on contact card
+// - validation for picture format
 // # FAVORITES
 // - css grid on contact card
 // # ADD
-// - validation for full name, email and number
-// - add icons inside top div
+// - validation for picture extension when upload
 // - improvements for add number style
 // - cancel button css
 // # EDIT
-// - validation for full name, email and number
+// - validations for numbers and profile pricture
 // - number underline css
 // - improvements for add number style
 // - cancel button css
+// - name and delete icon css
+// - first box must already be in the form if there is no numbers for the contact

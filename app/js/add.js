@@ -1,6 +1,6 @@
 const addForm = document.querySelector('#addForm');
 const cancelBtn = document.querySelector('.cancel-button');
-const saveBtn = document.querySelector('.save-button');
+// const saveBtn = document.querySelector('.save-button');
 let numbersContainer = document.querySelector('.numbers-container');
 let contactList = [];
 let contact = {};
@@ -20,14 +20,14 @@ function addContactToList() {
     let newNo = document.querySelector(`input[name='number${i}']`);
     let newCell = document.querySelector(`input[name='cell${i}']`);
     let newNumber;
-    if (newNo !== null && !newCell !== null) {
+    if (newNo && newCell && newNo.value !== '' && newCell.value !== '') {
       newNumber = {
         number: newNo.value,
         cell: newCell.value,
       };
+      // let saveData = JSON.stringify(newNumber);
+      contact.numbers.push(newNumber);
     }
-    let saveData = JSON.stringify(newNumber);
-    contact.numbers.push(saveData);
   }
   !localStorage['contactList']
     ? addContactToNewList(contact)
@@ -35,22 +35,21 @@ function addContactToList() {
 }
 
 function addContactToNewList(contact) {
-  contactList.push(contact);
+  contactList.unshift(contact);
   localStorage.setItem('contactList', JSON.stringify(contactList));
   window.location.assign('../../index.html');
 }
 
 function addContactToExistingList(contact) {
   contactList = JSON.parse(localStorage.getItem('contactList'));
-  contactList.push(contact);
+  contactList.unshift(contact);
   localStorage.setItem('contactList', JSON.stringify(contactList));
   window.location.assign('../../index.html');
 }
 
 const displayNumberBox = () => {
   const htmlNumberBox = `<div class="number-box flex">
-                              <input type="number" id="number0" name="number0" placeholder="Number" class="input-bar"
-                                  type="tel" pattern="[0-9]{6,}" />
+                              <input type="text" id="number0" name="number0" placeholder="Number" class="input-bar" />
                               <input type="text" name="cell0" id="cell0" placeholder="Cell" class="source-number" />
                               <div class="remove-number-circle flex">
                                   <div class="remove-number-icon">
@@ -64,7 +63,8 @@ const displayNumberBox = () => {
                               <div class=">
                                   <h4 class="add-number-text">Add number</h4>
                               </div>
-                          </div>`;
+                              <div class="err-msg "></div>
+                        </div>`;
   numbersContainer.innerHTML += htmlNumberBox;
   numbersContainer.innerHTML += htmlAddNumber;
 };
@@ -101,23 +101,22 @@ function createNewNumberBox(i) {
 
 function activateRemoveBtnsListeners() {
   let removeBtns = document.querySelectorAll('.remove-number-circle');
-  lastEl = removeBtns.length - 1;
+  let lastEl = removeBtns.length - 1;
   for (let i in removeBtns) {
-    console.log(removeBtns[i].className);
     if (removeBtns[i].tagName === 'DIV') {
       removeBtns[i].addEventListener('click', () => {
-        console.log(removeBtns[i].parentElement.children[0].name);
-        if (removeBtns[i].parentElement.children[0].name == 'number0') {
-          removeBtns[i].parentElement.children[0].value = null;
-          removeBtns[i].parentElement.children[1].value = null;
-          return;
-        } else if (
-          removeBtns[lastEl].parentElement.children[0].value ||
-          removeBtns[lastEl].parentElement.children[0].value
-        ) {
-          removeBtns[lastEl].parentElement.children[0].value = null;
-          removeBtns[lastEl].parentElement.children[1].value = null;
-        } else removeBtns[lastEl].parentElement.remove();
+        if (removeBtns[i] === removeBtns[lastEl])
+          if (removeBtns[i].parentElement.children[0].name === 'number0') {
+            removeBtns[i].parentElement.children[0].value = null;
+            removeBtns[i].parentElement.children[1].value = null;
+            return;
+          } else if (
+            removeBtns[lastEl].parentElement.children[0].value ||
+            removeBtns[lastEl].parentElement.children[0].value
+          ) {
+            removeBtns[lastEl].parentElement.children[0].value = null;
+            removeBtns[lastEl].parentElement.children[1].value = null;
+          } else removeBtns[lastEl].parentElement.remove();
       });
     }
   }
@@ -138,7 +137,8 @@ function activateAddNoBtns() {
       prevNumValue = e.path[4].children[1].children[i].children[0].value;
       prevCellValue = e.path[4].children[1].children[i].children[1].value;
     }
-    if (!prevNumValue) return;
+    if (prevNumValue) if (validatePhoneNumber() === false) return;
+
     if (!prevCellValue) return;
     if (i >= 4) {
       i = e.path[3].children[1].children.length - 2;
@@ -150,6 +150,7 @@ function activateAddNoBtns() {
   });
 }
 activateAddNoBtns();
+activateRemoveBtnsListeners();
 
 function clickUploadImgEl() {
   const imgFile = document.querySelector('.add-circle');
@@ -159,12 +160,14 @@ function clickUploadImgEl() {
 }
 clickUploadImgEl();
 
-let inputProfileImage = function () {
+let inputProfileImage = () => {
   let uploadCircle = document.querySelector('.add-circle');
   let profileImg;
   document.querySelector('#upfile').addEventListener('change', function (e) {
     const reader = new FileReader();
+    // console.log(reader.data);
     reader.addEventListener('load', () => {
+      console.log(reader);
       img = reader.result;
       if (profileImg === undefined) profileImg = new Image();
       profileImg.src = img;
@@ -192,7 +195,7 @@ const setError = (element, message) => {
     const errDisplay = inputBar.querySelector('.err-msg');
     errDisplay.innerText = message;
     errDisplay.classList.add('error');
-    errDisplay.classList.remove('succes');
+    errDisplay.classList.remove('success');
     return false;
   }
 };
@@ -202,7 +205,7 @@ const setSucces = (element) => {
     const inputBar = element.parentElement;
     const errDisplay = inputBar.querySelector('.err-msg');
     errDisplay.innerHTML = '';
-    errDisplay.classList.add('succes');
+    errDisplay.classList.add('success');
     errDisplay.classList.remove('error');
     return true;
   }
@@ -221,13 +224,44 @@ const checkIfEmailExists = (email) => {
 
 const isValidFullName = (fullname) => {
   const reg = /^([\w]{2,})+\s+([\w\s]{2,})+$/i;
-  return reg.test(String(fullname));
+  return reg.test(fullname);
 };
 
 const isValidEmail = (email) => {
   const reg =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return reg.test(String(email).toLowerCase());
+};
+
+const isValidNumber = (number) => {
+  const reg = /^(?=.*\d)[\d ]+$/;
+  return reg.test(number);
+};
+
+const validatePhoneNumber = () => {
+  const addNo = document.querySelector('.add-number-container');
+
+  let contactNo;
+  for (i = 0; i < 5; i++) {
+    contactNo = document.querySelector(`#number${i}`);
+    if (!contactNo.value) return;
+    if (contactNo.value.length < 11) {
+      setError(
+        addNo,
+        'Please include country and city in the number (example: 385 21 021 021 38598887777).'
+      );
+      return false;
+    } else if (!isValidNumber(contactNo.value)) {
+      setError(
+        addNo,
+        'Please input correct phone format (example: 385 21 021 021 38598887777).'
+      );
+      return false;
+    } else {
+      setSucces();
+      return true;
+    }
+  }
 };
 
 const validateEmail = () => {
@@ -258,14 +292,16 @@ const validateFullName = () => {
     return false;
   } else {
     setSucces();
+    setError(email, null);
     return true;
   }
 };
 
 addForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  // if (validateEmail() === false) return;
-  if (validateFullName())
+  if (validateFullName()) {
     if (validateEmail() === false) return;
-    else addContactToList();
+    if (validatePhoneNumber() === false) return;
+    addContactToList();
+  }
 });

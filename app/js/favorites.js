@@ -11,7 +11,6 @@ searchBar.addEventListener('keyup', (e) => {
   const filteredContacts = favoritesList.filter((contact) => {
     return contact.fullname.toLowerCase().includes(searchFiltered);
   });
-  console.log(filteredContacts);
   if (filteredContacts) {
     displayMyFavorites(filteredContacts);
     activateDeleteListeners(filteredContacts);
@@ -23,7 +22,6 @@ searchBar.addEventListener('keyup', (e) => {
 });
 
 const displayMyFavorites = (contacts) => {
-  console.log(contacts);
   contactsContainer.innerHTML = '';
   const htmlContactCards = contacts
     .map((contact) => {
@@ -81,11 +79,9 @@ function saveContactDetails(fullname) {
     return contact.fullname === fullname;
   });
   let contactDetails = contact;
-  console.log(contactDetails);
   localStorage.setItem('contactDetails', JSON.stringify(contactDetails));
 }
 
-// usable for CONTACT DETALILS > details.js
 function activateContactCardListeners() {
   // let contactCards = document.querySelectorAll('.contact-marked');
   // let contactsTop = document.querySelectorAll('.img-icon');
@@ -94,7 +90,7 @@ function activateContactCardListeners() {
   for (let i in contactsBottom) {
     if (contactsBottom[i].className == 'contact-bottom')
       contactsBottom[i].addEventListener('click', (e) => {
-        console.log(e);
+        // console.log(e);
         let contactDetails = e.path[2].children[1].innerText;
         saveContactDetails(contactDetails);
         window.location.assign('../../app/views/details.html');
@@ -104,7 +100,7 @@ function activateContactCardListeners() {
 activateContactCardListeners();
 
 function getNodeIndex(elm) {
-  var c = elm.parentNode.children,
+  let c = elm.parentNode.children,
     i = 0;
   for (; i < c.length; i++) if (c[i] == elm) return i;
 }
@@ -113,12 +109,12 @@ function addClickEventsToGridItems() {
   let gridItems = document.getElementsByClassName('contact-top');
   for (let i = 0; i < gridItems.length; i++) {
     gridItems[i].onclick = (e) => {
-      console.log(e);
+      // console.log(e);
       let position = getNodeIndex(e.target);
-      console.log(position);
+      // console.log(position);
       if (position !== 0 && position !== 3) {
         let contactDetails = e.path[2].children[1].innerText;
-        console.log(contactDetails);
+        // console.log(contactDetails);
         // window.location.assign('../../app/views/details.html');
         saveContactDetails(contactDetails);
       }
@@ -150,7 +146,6 @@ activateFavoriteListeners();
 
 function toggleFavoriteStatus(fullName) {
   for (let i in contactList) {
-    console.log(contactList.fullname);
     if (contactList[i].fullname === fullName)
       contactList[i].favorite
         ? (contactList[i].favorite = false)
@@ -177,7 +172,6 @@ activateEditListeners();
 function editContact(fullname) {
   for (let i in contactList) {
     if (contactList[i].fullname === fullname) {
-      console.log(fullname);
       saveContactDetails(fullname);
     }
   }
@@ -188,11 +182,8 @@ function activateDeleteListeners() {
   let deleteIcons = document.querySelectorAll('.delete-icon');
   for (let i in deleteIcons) {
     if (deleteIcons[i].tagName == 'DIV') {
-      // console.log(deleteIcons[i].parentElement.parentElement.innerText);
       deleteIcons[i].addEventListener('click', (e) => {
-        // console.log(e.path[2].children[1].innerText);
         fullname = e.path[2].children[1].innerText;
-        console.log(fullname);
         deleteContact(fullname);
       });
     }
@@ -201,11 +192,11 @@ function activateDeleteListeners() {
 activateDeleteListeners();
 
 function deleteContact(fullName) {
-  const index = favoritesList.findIndex((contact) => {
+  const index = contactList.findIndex((contact) => {
     return contact.fullname === fullName;
   });
-  favoritesList.splice(index, 1);
-  localStorage.setItem('contactList', JSON.stringify(favoritesList));
+  contactList.splice(index, 1);
+  localStorage.setItem('contactList', JSON.stringify(contactList));
   document.location.reload();
   console.log('MODAL HAST TO BE IMPLAMENTED HERE FOR DELETE FUNC');
 }
