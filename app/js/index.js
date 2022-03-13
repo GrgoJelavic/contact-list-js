@@ -53,7 +53,6 @@ const displayContacts = (contacts) => {
                         <div class=""></div>
                         <div class=""></div>
                         <div class=""></div>
-
                     </div>
                     <div class="contact-bottom">
                         <div class="name-output">${contact.fullname}</div>
@@ -137,7 +136,7 @@ function addClickEventsToGridItems() {
       if (position !== 0 && position !== 3) {
         console.log(position);
         let contactDetails = e.path[2].children[1].innerText;
-        window.location.assign('../../app/views/details.html');
+        // window.location.assign('../../app/views/details.html');
         saveContactDetails(contactDetails);
       }
     };
@@ -231,41 +230,3 @@ function saveContactDetails(fullname) {
   contactDetails = contact;
   localStorage.setItem('contactDetails', JSON.stringify(contactDetails));
 }
-
-//
-// #### TODO's:
-// # HOME:
-// - improve css & mobile responsive
-// - optional: confirmation modal on delete icon
-// # ADD:
-// - improve css & mobile responsive
-// - improvements for profile picture upload validation
-// # FAVORITES:
-// - improveme structure for reusable function
-// - DETAILS:
-// - improvements for contact card listeners (css grid)
-// - EDIT VIEW (html, css, js)
-// - edit profile picture
-// - delete icon
-// # NEXT:
-// - MOBILE RESPONSIVE DESIGN (css)
-// - optional personal:
-// - modular js code refactoring
-//
-// ### BUGs FIX
-// # HOME
-// - css grid on contact card
-// - validation for picture format
-// # FAVORITES
-// - css grid on contact card
-// # ADD
-// - validation for picture extension when upload
-// - improvements for add number style
-// - cancel button css
-// # EDIT
-// - validations for numbers and profile pricture
-// - number underline css
-// - improvements for add number style
-// - cancel button css
-// - name and delete icon css
-// - first box must already be in the form if there is no numbers for the contact
