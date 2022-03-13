@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact list</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script defer src="../js/add.js"></script>
 </head>
@@ -37,8 +38,9 @@
                             <div class="name-icon"></div>
                             <label for="fullname" class="header-text">full name</label>
                         </div>
-                        <input name="fullname" id="fullname" placeholder="First & Last name" class="input-bar">
-                        <div class="err-msg err-name">
+                        <div>
+                            <input name="fullname" id="fullname" placeholder="First & Last name" class="input-bar">
+                            <div class="err-msg"></div>
                         </div>
                     </div>
                     <div class="input-container">
@@ -46,8 +48,10 @@
                             <div class="email-icon"></div>
                             <label for="email" class="header-text">email</label>
                         </div>
-                        <input name="email" id="email" placeholder="Email" class="input-bar">
-                        <div class="err-msg err-mail"></div>
+                        <div>
+                            <input name="email" id="email" placeholder="Email" class="input-bar">
+                            <div class="err-msg "></div>
+                        </div>
                     </div>
                     <div class="input-container">
                         <div class="header-box flex">
@@ -58,11 +62,13 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <a href="../../index.html">
-                            <div class="cancel-button flex">
+                        <div class="cancel-button flex">
+                            <a href="../../index.html">
                                 <h4>Cancel</h4>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
+                        <!-- <button type="cancel" class="cancel-button flex">Cancel</button> -->
+
                         <button form="addForm" type="submit" class="save-button" value="submit">Save</button>
                     </div>
                 </form>

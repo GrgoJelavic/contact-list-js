@@ -69,18 +69,22 @@ function displayEditFormDetails() {
                                         <div class="upload-icon flex"></div>
                                     </div>
                                     <div id="upload-box">
-                                        <input id="upfile" type="file" name="image" value="${contactDetails.image}"/>
+                                        <input id="upfile" type="file" name="image" value="${
+                                          contactDetails.image
+                                        }"/>
                                     </div>
                                 </div>
                                 <div class=" right-section">
                                     <div class="name-output-container">
                                         <div class="details-name flex">
-                                            <a href='../../index.html'>
-                                                <div class="arrow-back-icon"></div>
-                                            </a>
-                                            <h4>${contactDetails.fullname}</h4>
-                                            <label>Delete</label>
-                                            <div class="delete-icon"></div>
+                                              <a href='../../index.html'>
+                                                  <div class="arrow-back-icon"></div>
+                                              </a>
+
+                                        </div>
+                                        <div class="edit-delete-icons">
+                                              <h4>Delete</h4>
+                                              <div class="delete-icon"></div>
                                         </div>
                                     </div>
                                     <form id="editForm" name="editForm">
@@ -89,16 +93,26 @@ function displayEditFormDetails() {
                                                 <div class="name-icon"></div>
                                                 <hlabel for="fullname" class="header-text">full name</label>
                                             </div>
-                                            <input name="fullname" id="fullname" placeholder="${contactDetails.fullname}" class="input-bar">
-                                            <div class="err-msg err-name"></div>
+                                            <div>
+                                              <input name="fullname" id="fullname" placeholder="${
+                                                contactDetails.fullname
+                                              }" class="input-bar">
+                                              <div class="err-msg"></div>
+                                            </div>
                                         </div>
                                         <div class="input-container">
                                             <div class="header-box flex">
                                                 <div class="email-icon"></div>
                                                 <label for="email "class="header-text">email</label>
                                             </div>
-                                            <input name="email" id="email" placeholder="${contactDetails.email}" class="input-bar">
-                                            <div class="err-msg err-mail"></div>
+                                            <div>
+                                              <input name="email" id="email" placeholder="${
+                                                contactDetails.email === ''
+                                                  ? 'Email'
+                                                  : contactDetails.email
+                                              }" class="input-bar">
+                                              <div class="err-msg"></div>
+                                            </div>
                                         </div>
                                         <div class="input-container">
                                             <div class="header-box flex">
@@ -109,11 +123,11 @@ function displayEditFormDetails() {
                                             </div>
                                         </div>
                                         <div class="buttons">
-                                            <a href="../../index.html">
-                                                <div class="cancel-button flex">
+                                            <div class="cancel-button flex">
+                                                <a href="../../index.html">
                                                     <h4>Cancel</h4>
-                                                </div>
-                                            </a>
+                                                </a>
+                                            </div>
                                             <button form="addForm" type="submit" class="save-button" value="submit">Save</button>
                                         </div>
                                      </form> 
@@ -138,7 +152,7 @@ function displayEditFormDetails() {
                                 <div class="add-number-circle flex">
                                     <div class="add-number-icon"></div>
                                 </div>
-                                <div class=">
+                                <div class="">
                                     <h4 class="add-number-text">Add number</h4>
                                 </div>
                             </div>`;
@@ -191,7 +205,6 @@ function editContactinTheList() {
   for (n in editedContact.numbers)
     if (editedContact.numbers[n])
       contactDetails.numbers.push(editedContact.numbers[n]);
-
   contactList.splice(index, 1);
   contactList.unshift(contactDetails);
   localStorage.setItem('contactList', JSON.stringify(contactList));
@@ -204,7 +217,7 @@ function createNewNumberBox(i) {
   noBox.className = 'number-box flex';
   const inputNo = document.createElement('input');
   inputNo.className = 'input-bar';
-  inputNo.type = 'number';
+  inputNo.type = 'text';
   inputNo.name = `number${i}`;
   inputNo.placeholder = `Number`;
   inputNo.id = `number${i}`;
@@ -295,6 +308,46 @@ function activateAddNoBtns() {
   });
 }
 activateAddNoBtns();
+
+function openModal() {
+  const modal = document.querySelector('#modal');
+  const overlay = document.querySelector('#overlay');
+  if (!modal) return;
+  modal.classList.add('active');
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  const modal = document.querySelector('#modal');
+  const overlay = document.querySelector('#overlay');
+  if (!modal) return;
+  modal.classList.add('remove');
+  overlay.classList.add('active');
+}
+
+function activateDeleteListener() {
+  const confirmDelete = document.querySelector('.delete-button');
+  let deleteIcon = document.querySelector('.delete-icon');
+  let fullname;
+  deleteIcon.addEventListener('click', (e) => {
+    openModal();
+    confirmDelete.addEventListener('click', () => {
+      deleteContact(contactDetails.fullname);
+      closeModal();
+      window.location.assign('../../index.html');
+    });
+  });
+}
+activateDeleteListener();
+
+function deleteContact() {
+  const index = contactList.findIndex((contact) => {
+    return contact.fullname === contactDetails.fullname;
+  });
+  contactList.splice(index, 1);
+  localStorage.setItem('contactList', JSON.stringify(contactList));
+  document.location.reload();
+}
 
 const setError = (element, message) => {
   if (element) {
@@ -403,22 +456,3 @@ const validateFullName = () => {
     return true;
   }
 };
-
-function activateDeleteListener() {
-  let deleteIcon = document.querySelector('.delete-icon');
-  deleteIcon.addEventListener('click', () => {
-    deleteContact();
-    window.location.assign('../../index.html');
-  });
-}
-activateDeleteListener();
-
-function deleteContact() {
-  const index = contactList.findIndex((contact) => {
-    return contact.fullname === contactDetails.fullname;
-  });
-  contactList.splice(index, 1);
-  localStorage.setItem('contactList', JSON.stringify(contactList));
-  document.location.reload();
-  console.log('MODAL HAS TO BE IMPLAMENTED HERE FOR DELETE!');
-}

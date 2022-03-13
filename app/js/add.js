@@ -60,7 +60,7 @@ const displayNumberBox = () => {
                               <div class="add-number-circle flex">
                                   <div class="add-number-icon"></div>
                               </div>
-                              <div class=">
+                              <div class="">
                                   <h4 class="add-number-text">Add number</h4>
                               </div>
                               <div class="err-msg "></div>
@@ -296,6 +296,12 @@ const validateFullName = () => {
     return true;
   }
 };
+
+cancelBtn.addEventListener('click', () => {
+  // window.location.assign('../../index.html');
+  window.history.back();
+  return false;
+});
 
 addForm.addEventListener('submit', (e) => {
   e.preventDefault();
