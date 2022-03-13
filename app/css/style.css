@@ -679,3 +679,137 @@ input[type='number']::-webkit-outer-spin-button {
   opacity: 1;
   pointer-events: all;
 }
+
+/* RESPONSIVE*/
+@media screen and (min-width: 600px) and (max-width: 1366px) {
+  .modal {
+    width: 400px;
+    height: 360px;
+  }
+  .modal > .buttons {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .cancel-delete {
+    margin: auto;
+  }
+  .delete-button {
+    margin: 20px auto;
+  }
+  .modal-body {
+    margin-bottom: 50px;
+  }
+}
+
+@media screen and (min-width: 8px) and (max-width: 1366px) {
+  .output-container {
+    width: 500px;
+  }
+  .input-container {
+    width: 500px;
+  }
+  .input-bar {
+    width: 240px;
+  }
+  .source-number {
+    width: 170px;
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1366px) {
+  .contacts-container {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 20px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .contacts-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .addNew {
+    margin: 0 auto 29px auto;
+  }
+  .contact-card {
+    margin: 0 auto 29px auto;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 768px) {
+  .search-bar > input {
+    width: 70%;
+  }
+  .contacts-container {
+    grid-template-columns: repeat(1, 1fr);
+    width: 94%;
+  }
+  .addNew {
+    flex-direction: row;
+    height: 100px;
+    width: 400px;
+    margin: 0 auto 20px auto;
+    padding: 0 200px 0 6px;
+  }
+  .contact-card {
+    height: 100px;
+    width: 400px;
+    margin: 0 auto 29px auto;
+  }
+  .contact-top {
+    grid-template-columns: 15% 64% 1% 1%;
+    grid-template-rows: 30% 70%;
+  }
+  .favorite {
+    grid-column-start: 2;
+    margin: 48px 0 0 140px;
+  }
+  .img-icon {
+    width: 46px;
+    height: 46px;
+    grid-column-start: 0;
+    grid-column-end: 1;
+    margin: 0 10px 0 20px;
+  }
+  .img-icon > img {
+    width: 46px;
+    height: 46px;
+  }
+  .contact-bottom {
+    position: absolute;
+    margin: 44px 4px 4px 88px;
+    height: 50px;
+  }
+  .name-output {
+    margin-right: 10px;
+  }
+  .edit-icon {
+    margin-left: 240px;
+  }
+  .delete-icon {
+    margin: 14px 0 0 220px;
+  }
+  .modal {
+    width: 400px;
+    height: 360px;
+  }
+  .modal > .buttons {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .cancel-delete {
+    margin: auto;
+  }
+  .delete-button {
+    margin: 12px auto;
+  }
+  .modal-body {
+    margin-bottom: 40px;
+  }
+}
+
+/* SMALL MOBILE */
+@media screen and (max-width: 600px) {
+  .contacts-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
