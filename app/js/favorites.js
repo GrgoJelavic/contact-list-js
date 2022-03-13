@@ -13,11 +13,11 @@ searchBar.addEventListener('keyup', (e) => {
   });
   if (filteredContacts) {
     displayMyFavorites(filteredContacts);
-    activateDeleteListeners(filteredContacts);
-    activateEditListeners(filteredContacts);
-    activateContactCardListeners(filteredContacts);
-    addClickEventsToGridItems(filteredContacts);
-    activateFavoriteListeners(filteredContacts);
+    addClickEventsToGridItems();
+    activateDeleteListeners();
+    activateEditListeners();
+    activateContactCardListeners();
+    activateFavoriteListeners();
   }
 });
 
@@ -25,7 +25,7 @@ const displayMyFavorites = (contacts) => {
   contactsContainer.innerHTML = '';
   const htmlContactCards = contacts
     .map((contact) => {
-      return `  <div class="contact-marked">
+      return `  <div class="contact-card">
                     <div class="contact-top">
                         <div ${
                           contact.favorite
@@ -73,6 +73,7 @@ const loadLists = async () => {
   }
 };
 loadLists();
+displayMyFavorites(favoritesList);
 
 function saveContactDetails(fullname) {
   const contact = contactList.find((contact) => {
@@ -83,7 +84,7 @@ function saveContactDetails(fullname) {
 }
 
 function activateContactCardListeners() {
-  // let contactCards = document.querySelectorAll('.contact-marked');
+  // let contactCards = document.querySelectorAll('.contact-card');
   // let contactsTop = document.querySelectorAll('.img-icon');
   let contactsBottom = document.querySelectorAll('.contact-bottom');
   // console.log(contactsBottom)
@@ -111,11 +112,11 @@ function addClickEventsToGridItems() {
     gridItems[i].onclick = (e) => {
       // console.log(e);
       let position = getNodeIndex(e.target);
-      // console.log(position);
+      console.log(position);
       if (position !== 0 && position !== 3) {
         let contactDetails = e.path[2].children[1].innerText;
         // console.log(contactDetails);
-        // window.location.assign('../../app/views/details.html');
+        window.location.assign('../../app/views/details.html');
         saveContactDetails(contactDetails);
       }
     };
@@ -177,14 +178,35 @@ function editContact(fullname) {
   }
 }
 
+function openModal() {
+  const modal = document.querySelector('#modal');
+  const overlay = document.querySelector('#overlay');
+  if (!modal) return;
+  modal.classList.add('active');
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  const modal = document.querySelector('#modal');
+  const overlay = document.querySelector('#overlay');
+  if (!modal) return;
+  modal.classList.add('remove');
+  overlay.classList.add('active');
+}
+
 function activateDeleteListeners() {
-  let fullname;
+  const confirmDelete = document.querySelector('.delete-button');
   let deleteIcons = document.querySelectorAll('.delete-icon');
+  let fullname;
   for (let i in deleteIcons) {
     if (deleteIcons[i].tagName == 'DIV') {
       deleteIcons[i].addEventListener('click', (e) => {
         fullname = e.path[2].children[1].innerText;
-        deleteContact(fullname);
+        openModal();
+        confirmDelete.addEventListener('click', () => {
+          deleteContact(fullname);
+          closeModal();
+        });
       });
     }
   }
@@ -198,5 +220,4 @@ function deleteContact(fullName) {
   contactList.splice(index, 1);
   localStorage.setItem('contactList', JSON.stringify(contactList));
   document.location.reload();
-  console.log('MODAL HAST TO BE IMPLAMENTED HERE FOR DELETE FUNC');
 }

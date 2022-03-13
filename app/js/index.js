@@ -1,5 +1,6 @@
 const contactsContainer = document.querySelector('.contacts-container');
 const searchBar = document.querySelector('#search-input');
+const overlay = document.querySelector('#overlay');
 let contactList = [];
 
 if (searchBar)
@@ -12,11 +13,11 @@ if (searchBar)
     console.log(filteredContacts);
     if (filteredContacts) {
       displayContacts(filteredContacts);
-      activateFavoriteListeners(filteredContacts);
-      activateDeleteListeners(filteredContacts);
-      activateContactCardListeners(filteredContacts);
-      activateEditListeners(filteredContacts);
+      activateFavoriteListeners();
+      activateDeleteListeners();
       addClickEventsToGridItems();
+      activateContactCardListeners();
+      activateEditListeners();
     }
   });
 
@@ -30,7 +31,7 @@ const displayContacts = (contacts) => {
                                 </a>`;
     const htmlContactCards = contacts
       .map((contact) => {
-        return `  <div class="contact-marked">
+        return `  <div class="contact-card">
                     <div class="contact-top">
                         <div ${
                           contact.favorite
@@ -41,17 +42,17 @@ const displayContacts = (contacts) => {
                               <img src=${
                                 contact.image
                                   ? contact.image
-                                  : '/app/assets/images/profile/empty-profile-img.png'
+                                  : './app/assets/images/profile/empty-profile-img.png'
                               }>
                         </div>
-                        <div class="edit-box hide">
+                        <a class="edit-box hide">
                             <div class="edit-icon"></div>
-                        </div>
+                        </a>
                         <div class="delete-icon hide"></div>
-                        <div class="left-middle"></div>
-                        <div class="left-middle"></div>
-                        <div class="right-middle"></div>
-                        <div class="right-middle"></div>
+                        <div class=""></div>
+                        <div class=""></div>
+                        <div class=""></div>
+                        <div class=""></div>
 
                     </div>
                     <div class="contact-bottom">
@@ -68,13 +69,14 @@ const loadContacts = async () => {
     if (!localStorage['contactList']) localStorage.setItem('contactList', '');
     else {
       contactList = JSON.parse(localStorage['contactList']);
-      await displayContacts(contactList);
+      displayContacts(contactList);
     }
   } catch (err) {
     console.error(err);
   }
 };
 loadContacts();
+displayContacts(contactList);
 
 function activateFavoriteListeners() {
   let heartIcons = document.querySelectorAll('.favorite');
@@ -106,57 +108,6 @@ function toggleFavoriteStatus(fullName) {
   }
 }
 
-function activateEditListeners() {
-  let editIcons = document.querySelectorAll('.edit-icon');
-  let fullName;
-  for (let i in editIcons) {
-    if (editIcons[i].tagName == 'DIV')
-      editIcons[i].addEventListener('click', (e) => {
-        console.log(e);
-        fullName = e.path[3].children[1].innerText;
-        console.log(fullName);
-        editContactView(fullName);
-      });
-  }
-}
-activateEditListeners();
-
-function editContactView(fullname) {
-  for (let i in contactList) {
-    console.log(contactList[i]);
-    if (contactList[i].fullname === fullname) {
-      console.log(contactList[i].fullname);
-      saveContactDetails(fullname);
-      window.location.assign('../../app/views/edit.html');
-    }
-  }
-}
-
-function activateDeleteListeners() {
-  let fullname;
-  let deleteIcons = document.querySelectorAll('.delete-icon');
-  for (let i in deleteIcons) {
-    if (deleteIcons[i].tagName == 'DIV') {
-      deleteIcons[i].addEventListener('click', (e) => {
-        fullname = e.path[2].children[1].innerText;
-        console.log(fullname);
-        deleteContact(fullname);
-      });
-    }
-  }
-}
-activateDeleteListeners();
-
-function deleteContact(fullName) {
-  const index = contactList.findIndex((contact) => {
-    return contact.fullname === fullName;
-  });
-  contactList.splice(index, 1);
-  localStorage.setItem('contactList', JSON.stringify(contactList));
-  document.location.reload();
-  console.log('MODAL HAST TO BE IMPLAMENTED HERE FOR DELETE FUNC');
-}
-
 function activateContactCardListeners() {
   let contactsBottom = document.querySelectorAll('.contact-bottom');
   // console.log(contactsBottom);
@@ -182,15 +133,83 @@ function addClickEventsToGridItems() {
   for (let i = 0; i < gridItems.length; i++) {
     gridItems[i].onclick = (e) => {
       let position = getNodeIndex(e.target);
-      // console.log(position);
+      console.log(position);
       if (position !== 0 && position !== 3) {
-        // console.log(position);
+        console.log(position);
         let contactDetails = e.path[2].children[1].innerText;
         window.location.assign('../../app/views/details.html');
         saveContactDetails(contactDetails);
       }
     };
   }
+}
+
+function activateEditListeners() {
+  let editIcons = document.querySelectorAll('.edit-icon');
+  let fullName;
+  for (let i in editIcons) {
+    if (editIcons[i].tagName == 'DIV')
+      editIcons[i].addEventListener('click', (e) => {
+        console.log(e);
+        fullName = e.path[3].children[1].innerText;
+        console.log(fullName);
+        editContactView(fullName);
+      });
+  }
+}
+activateEditListeners();
+
+function editContactView(fullname) {
+  for (let i in contactList) {
+    if (contactList[i].fullname === fullname) {
+      saveContactDetails(fullname);
+      window.location.assign('../../app/views/edit.html');
+    }
+  }
+}
+
+function openModal() {
+  const modal = document.querySelector('#modal');
+  const overlay = document.querySelector('#overlay');
+  if (!modal) return;
+  modal.classList.add('active');
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  const modal = document.querySelector('#modal');
+  const overlay = document.querySelector('#overlay');
+  if (!modal) return;
+  modal.classList.add('remove');
+  overlay.classList.add('active');
+}
+
+function activateDeleteListeners() {
+  const confirmDelete = document.querySelector('.delete-button');
+  let deleteIcons = document.querySelectorAll('.delete-icon');
+  let fullname;
+  for (let i in deleteIcons) {
+    if (deleteIcons[i].tagName == 'DIV') {
+      deleteIcons[i].addEventListener('click', (e) => {
+        fullname = e.path[2].children[1].innerText;
+        openModal();
+        confirmDelete.addEventListener('click', () => {
+          deleteContact(fullname);
+          closeModal();
+        });
+      });
+    }
+  }
+}
+activateDeleteListeners();
+
+function deleteContact(fullName) {
+  const index = contactList.findIndex((contact) => {
+    return contact.fullname === fullName;
+  });
+  contactList.splice(index, 1);
+  localStorage.setItem('contactList', JSON.stringify(contactList));
+  document.location.reload();
 }
 
 function getContactDetails() {
@@ -210,9 +229,9 @@ function saveContactDetails(fullname) {
     return contact.fullname === fullname;
   });
   contactDetails = contact;
-  console.log(contactDetails);
   localStorage.setItem('contactDetails', JSON.stringify(contactDetails));
 }
+
 //
 // #### TODO's:
 // # HOME:
