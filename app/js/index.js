@@ -136,7 +136,7 @@ function addClickEventsToGridItems() {
       if (position !== 0 && position !== 3) {
         console.log(position);
         let contactDetails = e.path[2].children[1].innerText;
-        // window.location.assign('../../app/views/details.html');
+        window.location.assign('../../app/views/details.html');
         saveContactDetails(contactDetails);
       }
     };
